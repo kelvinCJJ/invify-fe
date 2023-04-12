@@ -7,6 +7,7 @@ import {
   CategoryTwoTone,
   Dashboard,
   Inventory2,
+  LogoutOutlined,
   Settings,
   VerifiedUser,
 } from "@mui/icons-material";
@@ -26,7 +27,7 @@ import Link from "next/link";
 import Logo from "./Logo";
 import Topbar from "./Navbar";
 import { useStateContext } from "@/contexts/ContextProvider";
-import ActiveLink from "./ActiveLink";
+import ActiveLink from "./ui/ActiveLink";
 
 const Sidebar = ({ children }) => {
   const theme = useTheme();
@@ -41,15 +42,15 @@ const Sidebar = ({ children }) => {
   };
 
   const activeLink =
-    "flex flex-row space-x-3 cursor-pointer my-auto p-3 m-3 rounded-lg text-xs lg:text-base";
+    "flex flex-row space-x-2 cursor-pointer my-auto p-3 m-2 rounded-lg text-xs lg:text-base  md:overflow-hidden overflow-auto";
   const normalLink =
-    "flex flex-row space-x-3 hover:bg-slate-500 hover:text-gray-100 cursor-pointer my-auto p-3 m-3 rounded-lg text-xs lg:text-base";
+    "flex flex-row space-x-2 hover:bg-slate-500 hover:text-gray-100 cursor-pointer my-auto p-3 m-3 rounded-lg text-xs lg:text-base";
 
   return (
-    <div>
+    <div className="h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto">
       {activeMenu && (
         <>
-          <div className="flex flex-col justify-between items-center">
+          <div className="flex flex-col items-center">
             <div className="px-1 pt-4 rounded-lg ">
               <Link href="dashboard">
                 <Logo className="bg-transparent" />
@@ -104,10 +105,15 @@ const Sidebar = ({ children }) => {
                 <p className="uppercase">Analytics</p>
               </ActiveLink>
             </div>
+            <div className="absolute bottom-0">
+              <ActiveLink href="/logout">
+                <LogoutOutlined/>
+              </ActiveLink>
+            </div>
           </div>
         </>
       )}
-      ;
+      
     </div>
   );
 };

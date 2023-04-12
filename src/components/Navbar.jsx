@@ -8,23 +8,43 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
-import { DarkMode, LightMode, MenuOpen, Notifications, PortraitRounded } from "@mui/icons-material";
+import {
+  DarkMode,
+  LightMode,
+  Menu,
+  MenuOpen,
+  Notifications,
+  PortraitRounded,
+} from "@mui/icons-material";
 import { useStateContext } from "@/contexts/ContextProvider";
 
-const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
-  <Tooltip content={title} position="BottomCenter">
-    <button
-      type="button"
-      onClick={() => customFunc()}
-      className="relative text-xl rounded-full p-3 bg-slate-700 hover:bg-light-gray"
-    >
-      <span
-        className="absolute inline-flex rounded-full h-2 w-2 right-2 top-2 bg-white"
-      />
-      {icon}
-    </button>
-  </Tooltip>
-);
+const NavButton = ({ title, customFunc, icon, color, addDot }) => {
+  if (addDot == "true") {
+    return (
+      <Tooltip content={title} position="BottomCenter">
+        <button
+          type="button"
+          onClick={() => customFunc()}
+          className="relative text-xl rounded-full p-3 bg-slate-700 hover:bg-light-gray"
+        >
+          <span className="absolute inline-flex rounded-full h-2 w-2 right-2 top-2 bg-white" />
+          {icon}
+        </button>
+      </Tooltip>
+    );
+  }
+    return (
+      <Tooltip content={title} position="BottomCenter">
+        <button
+          type="button"
+          onClick={() => customFunc()}
+          className="relative text-xl rounded-full p-3 bg-slate-700 hover:bg-light-gray"
+        >
+          {icon}
+        </button>
+      </Tooltip>
+    );
+};
 
 const Navbar = () => {
   const {
@@ -66,18 +86,22 @@ const Navbar = () => {
   const handleActiveMenu = () => setActiveMenu(!activeMenu);
 
   return (
-    <div className="flex justify-between items-center px-4 py-4">
+    <div className="flex justify-between items-center px-4 py-4 relative">
       <NavButton
         title="Menu"
         customFunc={handleActiveMenu}
-        icon={<MenuOpen />}
+        addDot="false"
+        icon={<Menu />}
       />
       <div className="mx-2">
-      <NavButton title="Notification" dotColor="rgb(254, 201, 15)" customFunc={() => handleClick('notification')} icon={<Notifications />} />
-        
-        <PortraitRounded />
+        <NavButton
+          title="Notification"
+          addDot="true"
+          dotColor="rgb(254, 201, 15)"
+          customFunc={() => handleClick("notification")}
+          icon={<Notifications />}
+        />
       </div>
-      
     </div>
   );
 };

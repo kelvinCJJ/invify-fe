@@ -19,10 +19,10 @@ export default function Layout({ children }) {
   } = useStateContext();
   return (
     <>
-        <div className="flex flex-relative h-screen  md:overflow-hidden overflow-auto md:hover:overflow-auto">
-          <div className="flex relative">
+        <div className="flex ">
+          <div className="flex relative w-full">
             {activeMenu ? (
-              <div className="flex flex-col  w-24 md:w-44 lg:w-56 border-r-[1px] fixed bg-slate-800 ">
+              <div className="flex flex-col items-center w-24 md:w-44 lg:w-56 border-r-[1px]  bg-slate-800 ">
                 <Sidebar />
               </div>
             ) : (
@@ -33,16 +33,16 @@ export default function Layout({ children }) {
             <div
               className={
                 activeMenu
-                  ? " bg-slate-800  min-h-screen md:ml-72 w-full  "
-                  : " bg-slate-800  w-full min-h-screen flex-2 "
+                  ? " bg-slate-800  min-h-screen w-full"
+                  : " bg-slate-800  min-h-screen w-full"
               }
             >
-              <div className="fixed md:static dark:bg-gray-800 navbar w-full ">
+              <div className="static w-full">
                 <Navbar />
               </div>
-              <main>{children}</main>
-            </div>
-            <Footer />
+              <main className="m-5 px-4">{children}</main>
+              <Footer/>
+            </div>            
           </div>
         </div>
     </>
