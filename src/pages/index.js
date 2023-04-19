@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { useStateContext } from '@/contexts/ContextProvider';
 import { useEffect } from 'react';
 import Layout from '@/components/Layout';
+import { useState } from 'react';
 
 export const metadata = {
   title: "Invify",

@@ -2,22 +2,23 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import { ErrorMessage, Formik } from "formik";
 import axios from "axios";
-import { Grid } from "@mui/material";
+import { Alert, Grid } from "@mui/material";
 import Image from "next/image";
-import { redirect } from "next/navigation";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
+import jwt, { verify } from "jsonwebtoken";
 
 export const metadata = {
   title: "Login",
   description: "Login to your account",
 };
 
-export default function LoginPage() {
+export default function Login() {
+  const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
 
   return (
-    <div className="flex h-screen w-screen bg-black-500 text-slate-300  items-center justify-center ">
+    <div className="flex h-screen w-screen bg-darkshade-500 text-slate-300  items-center justify-center ">
       <div className="mx-auto flex w-full justify-center items-center flex-col space-y-2 p-3 sm:w-[450px]">
         <Logo className="h-10 w-10" />
         <h1 className="text-3xl font-bold tracking-tight">Welcome to Invify</h1>
@@ -38,26 +39,39 @@ export default function LoginPage() {
             return errors;
           }}
           onSubmit={async (values, { setSubmitting }) => {
-            console.log(values);
+            //console.log(values);
+            const credential = JSON.stringify(values, null, 2);
+            //console.log(credential);
             try {
               const user = await axios
-                .post("https://localhost:7028/login", values)
+                .post(process.env.AUTHURL+"/login", values)
                 .then((res) => {
-                  console.log(res);
-                  if (res.success == true) {
-                    res.value ? signIn("credentials",{} ) : setErrorMessage("Invalid credentials");
-                    redirect("/dashboard");
+                  // console.log(res);
+                  // console.log(res.data);
+                  if (res.data.success == true && res.data.value) {
+                    const Uservalue =  JSON.stringify(res.data.value, null, 2);                  
+                    localStorage.setItem("session_user", Uservalue)
+                    localStorage.setItem("token", res.data.value.token)    
+                    //console.log(tokenJson);
+                    router.push("/dashboard");
+                  } else {
+                    setErrorMessage(res.data.message);
                   }
-                 else {
-                    setErrorMessage("Invalid credentials");
-                  }                  
                 });
             } catch (err) {
               console.log(err);
-              setErrorMessage(err.response.data.message);
+              setErrorMessage(err.message);
             }
-
-            alert(JSON.stringify(values, null, 2));
+            // const status = await signIn("emailpassword", {
+            //   credential,
+            //   redirect: false,
+            //   // The pagcredentiale where you want to redirect to after a
+            //   // successful login
+            //   callbackUrl: "https://localhost:3000/dashboard",
+            // });
+            // console.log(status);
+            //setErrorMessage("Invalid credentials");
+            //alert(JSON.stringify(values, null, 2));
             setSubmitting(false);
           }}
         >
@@ -69,18 +83,22 @@ export default function LoginPage() {
             handleBlur,
             handleSubmit,
             isSubmitting,
-            /* and other goodies */
           }) => (
             <form
               onSubmit={handleSubmit}
               className="w-full p-3 flex flex-col  space-y-1"
             >
               {errorMessage ? (
-                <div className=" bg-rose-500 p-2 rounded-md text-center text-base text-slate-100">
+                <Alert variant="outlined" severity="error">
                   {errorMessage}
-                </div>
+               </Alert>
               ) : null}
               <div className="flex flex-col my-2">
+                {/* <input
+                  name="csrfToken"
+                  type="hidden"
+                  defaultValue={csrfToken}
+                /> */}
                 <input
                   type="email"
                   name="email"

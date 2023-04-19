@@ -11,42 +11,48 @@ import SearchIcon from "@mui/icons-material/Search";
 import {
   DarkMode,
   LightMode,
+  Logout,
+  LogoutOutlined,
   Menu,
   MenuOpen,
   Notifications,
   PortraitRounded,
 } from "@mui/icons-material";
 import { useStateContext } from "@/contexts/ContextProvider";
+import ActiveLink from "./ui/ActiveLink";
+import { useRouter } from "next/router";
+import axios from "axios";
 
-const NavButton = ({ title, customFunc, icon, color, addDot }) => {
+const NavButton = ({ title, customFunc, icon, iconColor, addDot }) => {
   if (addDot == "true") {
     return (
-      <Tooltip content={title} position="BottomCenter">
+      <Tooltip content={title} position="Center">
         <button
           type="button"
           onClick={() => customFunc()}
-          className="relative text-xl rounded-full p-3 bg-slate-700 hover:bg-light-gray"
+          className="relative text-xl rounded-full p-3  hover:bg-light-gray"
         >
-          <span className="absolute inline-flex rounded-full h-2 w-2 right-2 top-2 bg-white" />
+          <span className="absolute inline-flex rounded-full h-2 w-2 right-2 top-2 " />
           {icon}
         </button>
       </Tooltip>
     );
   }
-    return (
-      <Tooltip content={title} position="BottomCenter">
-        <button
-          type="button"
-          onClick={() => customFunc()}
-          className="relative text-xl rounded-full p-3 bg-slate-700 hover:bg-light-gray"
-        >
-          {icon}
-        </button>
-      </Tooltip>
-    );
+  return (
+    <Tooltip content={title} position="Center">
+      <button
+        type="button"
+        onClick={() => customFunc()}
+        className="relative text-xl rounded-full p-3  hover:bg-light-gray"
+      >
+        {icon}
+      </button>
+    </Tooltip>
+  );
 };
 
-const Navbar = () => {
+const Navbar = (auth) => {
+  const router = useRouter();
   const {
     activeMenu,
     setActiveMenu,
@@ -74,6 +80,25 @@ const Navbar = () => {
     }
   }, [screenSize]);
 
+
+
+  async function logout() {
+    try {
+      const user = await axios
+        .get(process.env.AUTHURL+"/logout")
+        .then((res) => {
+          if (res.data.success == true) {                
+            localStorage.clear();  
+            router.push("/login");
+          } else {
+            console.log(res.data.message);
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // useEffect(() => {
   //   const currentThemeColor = localStorage.getItem("colorMode");
   //   const currentThemeMode = localStorage.getItem("themeMode");
@@ -93,13 +118,19 @@ const Navbar = () => {
         addDot="false"
         icon={<Menu />}
       />
-      <div className="mx-2">
+      <div className="flex mx-2 space-x-2">
         <NavButton
           title="Notification"
           addDot="true"
           dotColor="rgb(254, 201, 15)"
           customFunc={() => handleClick("notification")}
-          icon={<Notifications />}
+          icon={<NotificationsOutlinedIcon />}
+        />
+        <NavButton
+          title="Logout"
+          addDot="false"
+          customFunc={() => logout()}
+          icon={<LogoutOutlined />}
         />
       </div>
     </div>

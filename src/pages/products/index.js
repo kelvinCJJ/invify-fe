@@ -6,9 +6,8 @@ import React from "react";
 const Product = () => {
   return (
     <Layout>
-      <div className="">
+      <div className="container">
         <h1>Product</h1>
-        <EnhancedTable/>
         <EnhancedTable/>
         
       </div>

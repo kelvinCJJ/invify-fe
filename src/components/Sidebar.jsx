@@ -29,7 +29,7 @@ import Topbar from "./Navbar";
 import { useStateContext } from "@/contexts/ContextProvider";
 import ActiveLink from "./ui/ActiveLink";
 
-const Sidebar = ({ children }) => {
+const Sidebar = ({ children, auth }) => {
   const theme = useTheme();
   //const colors = tokens(theme.palette.mode);
   const { currentColor, activeMenu, setActiveMenu, screenSize } =
@@ -42,49 +42,49 @@ const Sidebar = ({ children }) => {
   };
 
   const activeLink =
-    "flex flex-row space-x-2 cursor-pointer my-auto p-3 m-2 rounded-lg text-xs lg:text-base  md:overflow-hidden overflow-auto";
+    "flex flex-row space-x-3 bg-darkaccent-700 p-3 h-12 items-center cursor-pointer text-base ";
   const normalLink =
-    "flex flex-row space-x-2 hover:bg-slate-500 hover:text-gray-100 cursor-pointer my-auto p-3 m-3 rounded-lg text-xs lg:text-base";
+    "flex flex-row space-x-3  hover:bg-darkaccent-700 items-center p-3 h-14 cursor-pointer text-base hover:bg-slate-500";
 
   return (
-    <div className="h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto">
+    <div className="w-full h-screen md:overflow-hidden overflow-auto h-min:h-24 md:hover:overflow-auto z-10">
       {activeMenu && (
         <>
           <div className="flex flex-col items-center">
-            <div className="px-1 pt-4 rounded-lg ">
+            <div className="mx-2 my-1 rounded-lg ">
               <Link href="dashboard">
                 <Logo className="bg-transparent" />
               </Link>
             </div>
-            <div className="my-5">
+            <div className="w-full items-center my-7">
               <ActiveLink
                 href="/dashboard"
                 onClick={handleCloseSideBar}
                 activeClassName={activeLink}
                 className= {normalLink}  
-                // className="flex flex-row space-x-3 hover:bg-pastel-blue hover:text-gray-100 cursor-pointer my-auto p-3 m-3 rounded-lg text-xs lg:text-base "
+                //className="flex flex-row space-x-3 hover:bg-pastel-blue hover:text-gray-100 content-center cursor-pointer  p-3 m-3 rounded-lg text-xs lg:text-base "
               >
-                <Dashboard className="my-auto" />
-                <p className="uppercase">Dashboard</p>
+                <Dashboard className="" />
+                <p className="">Dashboard</p>
               </ActiveLink>
 
               <ActiveLink
-                href="/product"
+                href="/products"
                 onClick={handleCloseSideBar}
                 activeClassName={activeLink}
                 className= {normalLink}                
               >
-                <Inventory2 className="my-auto" />
-                <p className="uppercase">Products</p>
+                <Inventory2 className="" />
+                <p className="">Products</p>
               </ActiveLink>
               <ActiveLink
-                href="/product"
+                href="/categories"
                 onClick={handleCloseSideBar}
                 activeClassName={activeLink}
                 className= {normalLink}                
               >
-                <Category className="my-auto" />
-                <p className="uppercase">Category</p>
+                <Category className="" />
+                <p className="">Categories</p>
               </ActiveLink>
               <ActiveLink
                 href="/sales"
@@ -92,8 +92,8 @@ const Sidebar = ({ children }) => {
                 activeClassName={activeLink}
                 className= {normalLink}                
               >
-                <ReceiptOutlinedIcon className="my-auto" />
-                <p className="uppercase">Sales</p>
+                <ReceiptOutlinedIcon className="" />
+                <p className="">Sales</p>
               </ActiveLink>
               <ActiveLink
                 href="/analytics"
@@ -101,15 +101,11 @@ const Sidebar = ({ children }) => {
                 activeClassName={activeLink}
                 className= {normalLink}                
               >
-                <AnalyticsOutlined className="my-auto" />
-                <p className="uppercase">Analytics</p>
+                <AnalyticsOutlined className="" />
+                <p className="">Analytics</p>
               </ActiveLink>
             </div>
-            <div className="absolute bottom-0">
-              <ActiveLink href="/logout">
-                <LogoutOutlined/>
-              </ActiveLink>
-            </div>
+            
           </div>
         </>
       )}
