@@ -56,7 +56,7 @@ const Sidebar = ({ children, auth }) => {
                 <Logo className="bg-transparent" />
               </Link>
             </div>
-            <div className="w-full items-center my-7">
+            <div className="w-full items-center my-6">
               <ActiveLink
                 href="/dashboard"
                 onClick={handleCloseSideBar}

@@ -30,7 +30,7 @@ const NavButton = ({ title, customFunc, icon, iconColor, addDot }) => {
         <button
           type="button"
           onClick={() => customFunc()}
-          className="relative text-xl rounded-full p-3  hover:bg-light-gray"
+          className="relative self-center text-xl rounded-full p-1  hover:bg-light-gray"
         >
           <span className="absolute inline-flex rounded-full h-2 w-2 right-2 top-2 " />
           {icon}
@@ -43,7 +43,7 @@ const NavButton = ({ title, customFunc, icon, iconColor, addDot }) => {
       <button
         type="button"
         onClick={() => customFunc()}
-        className="relative text-xl rounded-full p-3  hover:bg-light-gray"
+        className="relative self-center text-xl rounded-full p-1  hover:bg-light-gray"
       >
         {icon}
       </button>
@@ -51,7 +51,7 @@ const NavButton = ({ title, customFunc, icon, iconColor, addDot }) => {
   );
 };
 
-const Navbar = (auth) => {
+const Navbar = ({ username }) => {
   const router = useRouter();
   const {
     activeMenu,
@@ -80,15 +80,13 @@ const Navbar = (auth) => {
     }
   }, [screenSize]);
 
-
-
   async function logout() {
     try {
       const user = await axios
-        .get(process.env.AUTHURL+"/logout")
+        .get(process.env.AUTHURL + "/logout")
         .then((res) => {
-          if (res.data.success == true) {                
-            localStorage.clear();  
+          if (res.data.success == true) {
+            localStorage.clear();
             router.push("/login");
           } else {
             console.log(res.data.message);
@@ -97,7 +95,7 @@ const Navbar = (auth) => {
     } catch (err) {
       console.log(err);
     }
-  };
+  }
 
   // useEffect(() => {
   //   const currentThemeColor = localStorage.getItem("colorMode");
@@ -112,13 +110,18 @@ const Navbar = (auth) => {
 
   return (
     <div className="flex justify-between items-center px-4 py-4 relative">
-      <NavButton
-        title="Menu"
-        customFunc={handleActiveMenu}
-        addDot="false"
-        icon={<Menu />}
-      />
-      <div className="flex mx-2 space-x-2">
+      <div className="flex flex-row mx-3 my-1 space-x-3">
+        <NavButton
+          title="Menu"
+          customFunc={handleActiveMenu}
+          addDot="false"
+          icon={<Menu />}
+        />
+        <div className="self-center" >
+          <h1 className="text-base">Welcome back, <strong>{username}</strong></h1>
+        </div>
+      </div>
+      <div className="flex mx-3 my-1 space-x-3">
         <NavButton
           title="Notification"
           addDot="true"

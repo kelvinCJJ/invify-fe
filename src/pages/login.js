@@ -2,7 +2,7 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import { ErrorMessage, Formik } from "formik";
 import axios from "axios";
-import { Alert, Grid } from "@mui/material";
+import { Alert, Grid, TextField } from "@mui/material";
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -44,14 +44,14 @@ export default function Login() {
             //console.log(credential);
             try {
               const user = await axios
-                .post(process.env.AUTHURL+"/login", values)
+                .post(process.env.AUTHURL + "/login", values)
                 .then((res) => {
                   // console.log(res);
                   // console.log(res.data);
                   if (res.data.success == true && res.data.value) {
-                    const Uservalue =  JSON.stringify(res.data.value, null, 2);                  
-                    localStorage.setItem("session_user", Uservalue)
-                    localStorage.setItem("token", res.data.value.token)    
+                    const Uservalue = JSON.stringify(res.data.value, null, 2);
+                    localStorage.setItem("session_user", Uservalue);
+                    localStorage.setItem("token", res.data.value.token);
                     //console.log(tokenJson);
                     router.push("/dashboard");
                   } else {
@@ -60,7 +60,7 @@ export default function Login() {
                 });
             } catch (err) {
               console.log(err);
-              setErrorMessage(err.message);
+              setErrorMessage(err.response.data.message);
             }
             // const status = await signIn("emailpassword", {
             //   credential,
@@ -89,34 +89,61 @@ export default function Login() {
               className="w-full p-3 flex flex-col  space-y-1"
             >
               {errorMessage ? (
-                <Alert variant="outlined" severity="error">
+                <Alert variant="filled" severity="error">
                   {errorMessage}
-               </Alert>
+                </Alert>
               ) : null}
-              <div className="flex flex-col my-2">
+              <div className="flex flex-col my-2 space-y-2">
                 {/* <input
                   name="csrfToken"
                   type="hidden"
                   defaultValue={csrfToken}
                 /> */}
-                <input
+                {/* <input
                   type="email"
                   name="email"
-                  className="bg-black-400 p-2 my-1 rounded-md  focus:outline-none focus:outline-emerald-400"
+                  className="bg-black-400 p-2  rounded-md  focus:outline-none focus:outline-emerald-400"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   placeholder="Email"
                   value={values.email}
                 />
-
                 <input
                   type="password"
                   name="password"
-                  className="bg-black-400 p-2 my-1 rounded-md focus:outline-none focus:outline-emerald-400"
+                  className="bg-black-400 p-2 rounded-md focus:outline-none focus:outline-emerald-400"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   placeholder="Password"
                   value={values.password}
+                /> */}
+                <TextField
+                  id="email"
+                  name="email"
+                  label="Email"
+                  variant="filled"
+                  type="email"
+                  margin="normal"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.email}
+                  error={errors.email && touched.email}
+                  helperText={errors.email && touched.email && errors.email}
+                />
+                <TextField
+                  id="filled-password-input"
+                  name="password"
+                  label="Password"                  
+                  variant="filled"
+                  type="password"
+                  margin="normal"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.password}
+                  error={errors.password && touched.password}
+                  helperText={
+                    errors.password && touched.password && errors.password
+                  }
                 />
               </div>
               <button

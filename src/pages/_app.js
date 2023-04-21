@@ -1,6 +1,8 @@
 import Layout from "@/components/Layout";
 import { ContextProvider } from "@/contexts/ContextProvider";
 import "@/styles/globals.css";
+import { theme2 } from "@/theme";
+import { ThemeProvider } from "@emotion/react";
 
 export default function App({
   Component,
@@ -11,7 +13,10 @@ export default function App({
 
   return getLayout(
       <ContextProvider>
+        <ThemeProvider theme={theme2}>
         <Component {...pageProps} />
+        </ThemeProvider>
       </ContextProvider>
   );
+
 }

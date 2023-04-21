@@ -8,18 +8,37 @@ import {
   TableSortLabel,
   TextField,
   TablePagination,
-  Button,
   TableContainer,
 } from "@mui/material";
 import { DeleteForever, Edit } from "@mui/icons-material";
+import { useRouter } from "next/router";
+import axios from "axios";
+import Button from "./Button";
+import { useStateContext } from "@/contexts/ContextProvider";
+import UniversalModal from "./UniversalModal";
+import { useEffect } from "react";
 
-const SortableTable = ({ headers, rows, pageurl }) => {
+const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const {openSnackbar, openModal, closeModal} = useStateContext();
 
+  const router = useRouter();
+  console.log(router);
+  //const [modalOpen, setModalOpen] = useState(false);
+
+  // const handleOpenModal = () => {
+  //   setModalOpen(true);
+  // };
+
+  // const handleCloseModal = () => {
+  //   setModalOpen(false);
+  // };
+
+  //Sorting
   const handleSort = (header) => {
     if (orderBy === header) {
       setOrder(order === "asc" ? "desc" : "asc");
@@ -28,12 +47,15 @@ const SortableTable = ({ headers, rows, pageurl }) => {
       setOrder("asc");
     }
   };
+  
 
+  //Search
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
     setPage(0);
   };
 
+  //Pagination
   const filteredRows = rows.filter((row) =>
     Object.values(row).some((value) =>
       value.toString().toLowerCase().includes(searchQuery.toLowerCase())
@@ -57,6 +79,47 @@ const SortableTable = ({ headers, rows, pageurl }) => {
     setPage(0);
   };
 
+  const handleEdit = (rowId) => {
+    router.push(router.pathname+`/edit/${rowId}`);
+  };
+
+  const handleDelete = (rowId) => {
+    openModal({
+      isAlert: true,
+      severity: 'error',
+      title: 'Delete',
+      content: 'Are you sure you want to delete this item?',
+      actions: [        
+        { label: 'Delete', onClick: () => deleteCategory(rowId), severity:"error", },
+        { label: 'Cancel', onClick: () => closeModal(),  severity:'info' },
+      ],
+    });
+    console.log("delete");
+  };
+
+  const deleteCategory = (rowId) => {
+    axios
+      .delete(process.env.APIURL+router.pathname+`/${rowId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        closeModal();
+        openSnackbar(res.data.message, "success");
+      })
+      .catch((err) => {
+        closeModal();
+        openSnackbar(err.response.data.message, "error");
+      });
+      onDelete(rowId);
+    };
+
+    // useEffect (() => {
+    //   console.log("useEffect");
+    // }, [setRows]);
+
   return (
     <div>
       <div>
@@ -64,12 +127,34 @@ const SortableTable = ({ headers, rows, pageurl }) => {
           label="Search"
           value={searchQuery}
           onChange={handleSearchChange}
+          margin="normal"
+          variant="standard"
+          color="light"          
+          InputLabelProps={{
+            className: "text-darkaccent-100 ",
+          }}
+          InputProps={{
+            className: "text-darkaccent-100 ",
+          }}
+          className="rounded-lg  "
         />
       </div>
       <TableContainer className="bg-lightshade-500 mt-3">
-        <Table >
+        <Table>
           <TableHead>
-            <TableRow>
+            <TableRow className="border-b-2 border-darkaccent-600">
+              <TableCell
+                key={"#"}
+                sortDirection={orderBy === "#" ? order : false}
+              >
+                <TableSortLabel
+                  active={orderBy === "#"}
+                  direction={order}
+                  onClick={() => handleSort(0)}
+                >
+                  #
+                </TableSortLabel>
+              </TableCell>
               {headers.map((header) => (
                 <TableCell
                   key={header.id}
@@ -90,8 +175,14 @@ const SortableTable = ({ headers, rows, pageurl }) => {
           <TableBody>
             {sortedRows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
-                <TableRow key={row.id}>
+              .map((row, index) => (
+                <TableRow
+                  key={row.id}
+                  className="border-b-2 border-darkaccent-600"
+                >
+                  <TableCell key={page * rowsPerPage + index + 1}>
+                    {page * rowsPerPage + index + 1}
+                  </TableCell>
                   {headers.map((header) => (
                     <TableCell key={`${row.id}-${header.id}`}>
                       {row[header.id]}
@@ -100,8 +191,10 @@ const SortableTable = ({ headers, rows, pageurl }) => {
                   <TableCell className="p-1 m-1 space-x-2">
                     <Button
                       variant="contained"
-                      href={`${pageurl}/${row.id}`}
-                      style={{ textAlign: "center" }}
+                      //href={`${pageurl}/${row.id}`}
+                      severity={"info"}
+                      onClick={() => handleEdit(row.id)}
+                      //className="bg-main-500 hover:bg-main-700  mr-2 "
                     >
                       <Edit
                         style={{
@@ -109,12 +202,13 @@ const SortableTable = ({ headers, rows, pageurl }) => {
                           verticalAlign: "middle",
                         }}
                       />
-                      edit
                     </Button>
                     <Button
                       variant="contained"
-                      href={`${pageurl}/${row.id}`}
-                      style={{ textAlign: "center" }}
+                      //href={`${pageurl}/${row.id}`}
+                      severity="error"
+                      onClick={() => handleDelete(row.id)}
+                      //className="bg-main-500 hover:bg-main-700"
                     >
                       <DeleteForever
                         style={{
@@ -122,7 +216,6 @@ const SortableTable = ({ headers, rows, pageurl }) => {
                           verticalAlign: "middle",
                         }}
                       />
-                      delete
                     </Button>
                   </TableCell>
                 </TableRow>
