@@ -21,10 +21,10 @@ import { Alert } from "@mui/material";
     snackbarMessage ?
     <MuiSnackbar
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      open={open}
+      open={snackbarOpen}
       autoHideDuration={3000}
       onClose={closeSnackbar}
-      TransitionComponent={props => <Slide {...props} direction="left" />}
+      TransitionComponent={props => <Slide {...props} direction="left" in />}
     >
       <Alert variant="filled" onClose={closeSnackbar} severity={snackbarSeverity} sx={{ width: "100%" }}>
         {snackbarMessage}

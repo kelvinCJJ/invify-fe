@@ -61,10 +61,12 @@ import { createTheme } from "@mui/material";
 
 
 export const theme2 = createTheme({
+  
   status: {
     danger: '#e53e3e',
   },
   palette: {
+    mode: 'dark',
     primary: {
       main: '#244553',
       contrastText: '#fff',

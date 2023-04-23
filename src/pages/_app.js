@@ -3,6 +3,9 @@ import { ContextProvider } from "@/contexts/ContextProvider";
 import "@/styles/globals.css";
 import { theme2 } from "@/theme";
 import { ThemeProvider } from "@emotion/react";
+import { CssBaseline } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 export default function App({
   Component,
@@ -14,7 +17,10 @@ export default function App({
   return getLayout(
       <ContextProvider>
         <ThemeProvider theme={theme2}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <CssBaseline />
         <Component {...pageProps} />
+        </LocalizationProvider>
         </ThemeProvider>
       </ContextProvider>
   );

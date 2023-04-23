@@ -8,8 +8,9 @@ import UniversalModal from "@/components/ui/UniversalModal";
 import Button from "@/components/ui/Button";
 import { useStateContext } from "@/contexts/ContextProvider";
 import { Add } from "@mui/icons-material";
+import dayjs from "dayjs";
 
-function Category() {
+function Categories() {
   const router = useRouter();
   const [headData, setHeadData] = useState([]);
   const [rowData, setRowData] = useState([]);
@@ -30,29 +31,20 @@ function Category() {
   };
 
   useEffect(() => {
-    //console.log(snackbarOpen);
-    // if (!snackbarOpen) {
-    //   openSnackbar();
-    // }
     getCategories();
   }, []);
 
   async function getCategories() {
     try {
       const headers = [
-        { id: "id", label: "Id", disablePadding: false, numeric: false },
+        // { id: "id", label: "Id", disablePadding: false, numeric: false },
         { id: "name", label: "Name", disablePadding: false, numeric: false },
-        {
-          id: "dateTimeCreated",
-          label: "Created",
-          disablePadding: false,
-          numeric: false,
-        },
+        { id: "dateTimeCreated", label: "Date time Created", disablePadding: false, numeric: false, },
         // { id: "action", label: "Actions", disablePadding: false, numeric: false },
       ];
       setHeadData(headers);
       await axios
-        .get(process.env.APIURL + "/categories/all", {
+        .get(process.env.APIURL + "/categories", {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -60,6 +52,9 @@ function Category() {
         })
         .then((res) => {
           console.log(res.data);
+          res.data.map((item) => {
+            item.dateTimeCreated = new dayjs(item.dateTimeCreated).format("DD/MM/YYYY");
+          });
           setRowData(res.data);
           setLoading(false);
         });
@@ -93,4 +88,4 @@ function Category() {
   );
 }
 
-export default Category;
+export default Categories;

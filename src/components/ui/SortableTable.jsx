@@ -9,8 +9,14 @@ import {
   TextField,
   TablePagination,
   TableContainer,
+  InputAdornment,
 } from "@mui/material";
-import { DeleteForever, Edit } from "@mui/icons-material";
+import {
+  DeleteForever,
+  Edit,
+  Search,
+  SearchOutlined,
+} from "@mui/icons-material";
 import { useRouter } from "next/router";
 import axios from "axios";
 import Button from "./Button";
@@ -24,10 +30,9 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const {openSnackbar, openModal, closeModal} = useStateContext();
+  const { openSnackbar, openModal, closeModal } = useStateContext();
 
   const router = useRouter();
-  console.log(router);
   //const [modalOpen, setModalOpen] = useState(false);
 
   // const handleOpenModal = () => {
@@ -47,7 +52,6 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
       setOrder("asc");
     }
   };
-  
 
   //Search
   const handleSearchChange = (event) => {
@@ -55,11 +59,14 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
     setPage(0);
   };
 
+  //console.log(rows);
   //Pagination
   const filteredRows = rows.filter((row) =>
-    Object.values(row).some((value) =>
-      value.toString().toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    Object.values(row).some((value) => {
+      //console.log(value);
+      return value !==null ? value.toString().toLowerCase().includes(searchQuery.toLowerCase()) : false;
+      
+    })
   );
 
   const sortedRows = filteredRows.sort((a, b) => {
@@ -80,18 +87,22 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
   };
 
   const handleEdit = (rowId) => {
-    router.push(router.pathname+`/edit/${rowId}`);
+    router.push(router.pathname + `/edit/`+rowId);
   };
 
   const handleDelete = (rowId) => {
     openModal({
       isAlert: true,
-      severity: 'error',
-      title: 'Delete',
-      content: 'Are you sure you want to delete this item?',
-      actions: [        
-        { label: 'Delete', onClick: () => deleteCategory(rowId), severity:"error", },
-        { label: 'Cancel', onClick: () => closeModal(),  severity:'info' },
+      severity: "error",
+      title: "Delete",
+      content: "Are you sure you want to delete this item?",
+      actions: [
+        {
+          label: "Delete",
+          onClick: () => deleteCategory(rowId),
+          severity: "error",
+        },
+        { label: "Cancel", onClick: () => closeModal(), severity: "info" },
       ],
     });
     console.log("delete");
@@ -99,7 +110,7 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
 
   const deleteCategory = (rowId) => {
     axios
-      .delete(process.env.APIURL+router.pathname+`/${rowId}`, {
+      .delete(process.env.APIURL + router.pathname + `/${rowId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -113,12 +124,12 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
         closeModal();
         openSnackbar(err.response.data.message, "error");
       });
-      onDelete(rowId);
-    };
+    onDelete(rowId);
+  };
 
-    // useEffect (() => {
-    //   console.log("useEffect");
-    // }, [setRows]);
+  // useEffect (() => {
+  //   console.log("useEffect");
+  // }, [setRows]);
 
   return (
     <div>
@@ -129,20 +140,23 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
           onChange={handleSearchChange}
           margin="normal"
           variant="standard"
-          color="light"          
-          InputLabelProps={{
-            className: "text-darkaccent-100 ",
-          }}
+          color="light"
           InputProps={{
-            className: "text-darkaccent-100 ",
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search className="" />
+              </InputAdornment>
+            ),
+            placeholder:"search..."
           }}
-          className="rounded-lg  "
+          className="rounded-lg"
+          
         />
       </div>
-      <TableContainer className="bg-lightshade-500 mt-3">
+      <TableContainer className="bg-darkaccent-800 mt-3 rounded-xl p-3">
         <Table>
           <TableHead>
-            <TableRow className="border-b-2 border-darkaccent-600">
+            <TableRow className="border-b-2 border-darkaccent-600" >
               <TableCell
                 key={"#"}
                 sortDirection={orderBy === "#" ? order : false}
@@ -179,6 +193,7 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
                 <TableRow
                   key={row.id}
                   className="border-b-2 border-darkaccent-600"
+                  hover
                 >
                   <TableCell key={page * rowsPerPage + index + 1}>
                     {page * rowsPerPage + index + 1}
@@ -192,7 +207,7 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
                     <Button
                       variant="contained"
                       //href={`${pageurl}/${row.id}`}
-                      severity={"info"}
+                      severity={"light"}
                       onClick={() => handleEdit(row.id)}
                       //className="bg-main-500 hover:bg-main-700  mr-2 "
                     >

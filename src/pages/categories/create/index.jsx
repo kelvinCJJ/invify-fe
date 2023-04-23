@@ -1,14 +1,11 @@
 //add category page
 import React from "react";
-import { Box, Button, Grid, TextField } from "@mui/material";
+import { Button, Grid, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import axios from "axios";
 import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import Snackbar from "@/components/ui/Snackbar";
-import AlertSnackbar from "@/components/ui/AlertSnackbar";
-import { BorderColor } from "@mui/icons-material";
 import BGrid from "@/components/ui/BGrid";
 import { useStateContext } from "@/contexts/ContextProvider";
 
@@ -19,13 +16,6 @@ const CreateCategory = () => {
   // const [snackbarMessage, setSnackbarMessage] = useState("");
   // const [severity, setSeverity] = useState("success");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
 
   const formik = useFormik({
     initialValues: {
@@ -48,12 +38,14 @@ const CreateCategory = () => {
             //   //query: { snackbar: res.data.message },
             //   // Replace [id] with the ID of the newly created item
             // });
-            openSnackbar(res.data.message, "success");
+            openSnackbar("Category created successfully", "success");
+            formik.setValues({
+              name: "",
+            });
           } else {
             openSnackbar(res.data.message, "error");
             
           }
-          setIsSubmitting(false);
         })
         .catch((err) => {
           console.log(err);
@@ -61,6 +53,8 @@ const CreateCategory = () => {
           // setSnackbarSeverity("error");
           // setSnackbarOpen(true);
           openSnackbar(err.response.data.message, "error");
+        })
+        .finally(() => {
           setIsSubmitting(false);
         });
     },

@@ -1,131 +1,149 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Link from "next/link";
 import Logo from "@/components/Logo";
-import { Formik } from "formik";
-import { useRouter } from "next/router";
+import { ErrorMessage, Formik, useFormik } from "formik";
 import axios from "axios";
+import { Alert, Grid, TextField } from "@mui/material";
+import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import jwt, { verify } from "jsonwebtoken";
+import Button from "@/components/ui/Button";
+import * as Yup from "yup";
 
-const theme = createTheme();
+export const metadata = {
+  title: "Login",
+  description: "Login to your account",
+};
 
-export default function Register() {
+export default function Login() {
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setSubmitting] = useState(false);
+
+  //yup email validation schema
+  const validationSchema = Yup.object({
+    email: Yup.string().test("is-email", "Invalid email address", (value) =>
+      (value + "").match(/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/)
+    ),
+  });
+
+  const formik = useFormik({
+    initialValues: { email: "", username:"", password: "" },
+    validationSchema: validationSchema,
+    onSubmit: async (values, { setSubmitting }) => {
+      setSubmitting(true);
+      //console.log(values);
+      const credential = JSON.stringify(values, null, 2);
+      //console.log(credential);
+      try {
+        const user = await axios
+          .post(process.env.AUTHURL + "/register", values)
+          .then((res) => {
+            if (res.data.success == true) {
+              router.push("/login");
+            } else {
+              setErrorMessage(res.data.message);
+            }
+          });
+      } catch (err) {
+        console.log(err);
+        setErrorMessage(err.response.data.message);
+      }
+      setSubmitting(false);
+    },
+  });
 
   return (
-    <div className="flex h-screen w-screen bg-black-500 text-slate-300  items-center justify-center ">
+    <div className="flex h-screen w-screen bg-darkshade-500 text-slate-300  items-center justify-center ">
       <div className="mx-auto flex w-full justify-center items-center flex-col space-y-2 p-3 sm:w-[450px]">
         <Logo className="h-10 w-10" />
         <h1 className="text-3xl font-bold tracking-tight">Welcome to Invify</h1>
-        <p className="text-md ">
-          Enter your credentials to access your account
+        <p className="text-md text-center">
+          The faster you create an account,
+          the faster you can start using Invify!
         </p>
-        <Formik
-          initialValues={{ email: "", password: "" }}
-          validate={(values) => {
-            const errors = {};
-            if (!values.email) {
-              errors.email = "Required";
-            } else if (
-              !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-            ) {
-              errors.email = "Invalid email address";
-            }
-            return errors;
-          }}
-          onSubmit={async (values, { setSubmitting }) => {
-            console.log(values);
-            const user = await axios
-              .post("https://localhost:7028/auth/register", values)
-              .then((res) => {
-                console.log(res);
-                console.log(res.data);
-                router.push("/login");
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-          }}
+        <form
+          onSubmit={formik.handleSubmit}
+          className="w-full p-3 flex flex-col  space-y-1"
         >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            /* and other goodies */
-          }) => (
-            <form
-              onSubmit={handleSubmit}
-              className="w-full p-3 flex flex-col  space-y-1"
-            >
-              {errors.email != null && errors.password != null ? (
-                <div className=" bg-rose-500 p-2 rounded-md text-center text-base text-slate-100">
-                  {errors.email ? errors.email : null}
-                  {errors.password ? errors.password : null}
-                </div>
-              ) : null}
-              <div className="flex flex-col my-2">
-                <input
-                  type="email"
-                  name="email"
-                  className="bg-black-400 p-2 my-1 rounded-md  focus:outline-none focus:outline-emerald-400"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Email"
-                  value={values.email}
-                />
-
-                <input
-                  type="username"
-                  name="username"
-                  className="bg-black-400 p-2 my-1 rounded-md  focus:outline-none focus:outline-emerald-400"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Username"
-                  value={values.username}
-                />
-                <input
-                  type="password"
-                  name="password"
-                  className="bg-black-400 p-2 my-1 rounded-md focus:outline-none focus:outline-emerald-400"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Password"
-                  value={values.password}
-                />
-              </div>
-              <button
-                type="submit"
-                className="bg-slate-500 p-2 text-lg rounded-lg"
-                disabled={isSubmitting}
-              >
-                Submit
-              </button>
-            </form>
-          )}
-        </Formik>
+          {errorMessage ? (
+            <Alert variant="filled" severity="error">
+              {errorMessage}
+            </Alert>
+          ) : null}
+          <div className="flex flex-col my-2 space-y-2">
+            <TextField
+              id="email"
+              name="email"
+              label="Email"
+              variant="filled"
+              type="email"
+              margin="normal"
+              color="light"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.email}
+              error={formik.errors.email && formik.touched.email}
+              helperText={
+                formik.errors.email &&
+                formik.touched.email &&
+                formik.errors.email
+              }
+            />
+            <TextField
+              id="username"
+              name="username"
+              label="Name"
+              variant="filled"
+              type="text"
+              margin="normal"
+              color="light"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.username}
+              error={formik.errors.username && formik.touched.username}
+              helperText={
+                formik.errors.username &&
+                formik.touched.username &&
+                formik.errors.username
+              }
+            />
+            <TextField
+              id="filled-password-input"
+              name="password"
+              label="Password"
+              variant="filled"
+              type="password"
+              margin="normal"
+              color="light"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+              error={formik.errors.password && formik.touched.password}
+              helperText={
+                formik.errors.password &&
+                formik.touched.password &&
+                formik.errors.password
+              }
+            />
+          </div>
+          <Button
+            type="submit"
+            variant="filled"
+            severity=""
+            disabled={isSubmitting}
+          >
+            Submit
+          </Button>
+        </form>
+        {/* )}
+        </Formik> */}
         <p className="px-8 text-center text-sm text-slate-500 ">
           <Link
-            href="/register"
+            href="/login"
             className="hover:text-brand underline underline-offset-4"
           >
-            Don&apos;t have an account? Sign Up
+            Have an account? Sign in here
           </Link>
         </p>
       </div>
