@@ -17,7 +17,8 @@ export const metadata = {
 
 export default function Login() {
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState("");
+  const [message, setMessage] = useState("");
+  const [alert, setAlert] = useState("success");
   const [isSubmitting, setSubmitting] = useState(false);
 
   //yup email validation schema
@@ -28,7 +29,7 @@ export default function Login() {
   });
 
   const formik = useFormik({
-    initialValues: { email: "", username:"", password: "" },
+    initialValues: { email: "", username: "", password: "" },
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true);
@@ -40,14 +41,21 @@ export default function Login() {
           .post(process.env.AUTHURL + "/register", values)
           .then((res) => {
             if (res.data.success == true) {
-              router.push("/login");
+              setAlert("success");
+              setMessage("Registration successful!");
+              setTimeout(() => {
+                router.push("/login");
+                }, 1500);
+              
             } else {
-              setErrorMessage(res.data.message);
+              setAlert("error");
+              setMessage(res.data.message);
             }
           });
       } catch (err) {
         console.log(err);
-        setErrorMessage(err.response.data.message);
+        setAlert("error");
+        setMessage(err.response.data.message);
       }
       setSubmitting(false);
     },
@@ -59,16 +67,16 @@ export default function Login() {
         <Logo className="h-10 w-10" />
         <h1 className="text-3xl font-bold tracking-tight">Welcome to Invify</h1>
         <p className="text-md text-center">
-          The faster you create an account,
-          the faster you can start using Invify!
+          The faster you create an account, the faster you can start using
+          Invify!
         </p>
         <form
           onSubmit={formik.handleSubmit}
           className="w-full p-3 flex flex-col  space-y-1"
         >
-          {errorMessage ? (
-            <Alert variant="filled" severity="error">
-              {errorMessage}
+          {message ? (
+            <Alert variant="filled" severity={alert}>
+              {message}
             </Alert>
           ) : null}
           <div className="flex flex-col my-2 space-y-2">

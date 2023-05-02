@@ -1,11 +1,10 @@
-import { ResponsivePie } from "@nivo/pie";
-import { mockPieData as data } from "../data/mockData";
-import { colors } from "@mui/material";
+import { Card, colors } from "@mui/material";
+import { mockPieData } from "@/data/mockData";
 
 const PieChart = () => {
   return (
-    <ResponsivePie
-      data={data}
+    <Card
+      data={mockPieData}
       theme={{
         axis: {
           domain: {
@@ -76,15 +75,15 @@ const PieChart = () => {
       ]}
       legends={[
         {
-          anchor: "bottom",
-          direction: "row",
+          anchor: "left",
+          direction: "column",
           justify: false,
           translateX: 0,
           translateY: 56,
-          itemsSpacing: 0,
+          itemsSpacing: 2,
           itemWidth: 100,
           itemHeight: 18,
-          itemTextColor: "#999",
+          itemTextColor: "#fff",
           itemDirection: "left-to-right",
           itemOpacity: 1,
           symbolSize: 18,

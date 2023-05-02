@@ -67,7 +67,7 @@ const CreateProduct = () => {
       .then((res) => {
         //console.log(res.data);
         setCategories(res.data);
-        formik.setFieldValue("categoryId", res.data[0].id);
+        //formik.setFieldValue("categoryId", res.data[0].id);
       });
   }
 
@@ -93,12 +93,12 @@ const CreateProduct = () => {
       description: "",
       price: "",
       cost: "",
-      categoryId: 0,
+      categoryId: -1,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       setIsSubmitting(true);
-      //console.log(values);
+      console.log(values);
       axios
         .post(process.env.APIURL + "/products", values, {
           headers: {
@@ -230,6 +230,8 @@ const CreateProduct = () => {
                 {formik.errors.category && <p>{formik.errors.category}</p>}
               </FormGroup> */}
               <Autocomplete
+                id="categoryId"
+                name="categoryId"
                 open={open}
                 color="light"
                 onOpen={() => {

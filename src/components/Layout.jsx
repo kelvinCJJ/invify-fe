@@ -20,7 +20,7 @@ const jwt = require("jsonwebtoken");
 export default function Layout({ children }) {
   const router = useRouter();
   const path = router.asPath;
-  const username = "test";
+  const[userName, setUserName] = useState('test');
   const { auth, setAuth } = useState(false);
   const [open, setOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -76,12 +76,17 @@ export default function Layout({ children }) {
       }
     } catch (e) {
       console.log(e);
-      setAuth(false);
     }
+  }
+
+  const getUsername = () => {
+    const user = localStorage.getItem('session_user') ? JSON.parse(localStorage.getItem('session_user')) : null;
+    setUserName(user.userName);
   }
 
   useEffect(() => {
     getAuth();
+    getUsername();
   }, []);
     // if (router.query.snackbar) {
     //   setSnackbarMessage(router.query.snackbar);
@@ -113,13 +118,6 @@ export default function Layout({ children }) {
     <>
       <div className="flex ">
         <div className="flex relative w-full">
-        {/* <Snackbar
-          open={open}
-          setOpen={setOpen}
-          message={snackbarMessage}
-          severity={severity}
-          handleClose={handleClose}
-        /> */}
           {activeMenu ? (
             <div className="items-center w-48 lg:w-56 border-r-[1px]  bg-darkshade-600 ">
               <Sidebar />
@@ -137,7 +135,7 @@ export default function Layout({ children }) {
             }
           >
             <div className="static w-full">
-              <Navbar username={username} />
+              <Navbar username={userName} />
             </div>
             <main className="m-5 px-4">
               <div className="p-2">
@@ -146,7 +144,6 @@ export default function Layout({ children }) {
 
               <div className="sm:px-4 md:px-">{children}</div>
             </main>
-            {/* <Footer /> */}
           </div>
         </div>
       </div>

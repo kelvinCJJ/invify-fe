@@ -136,7 +136,7 @@ const CreateSales = () => {
                 Create Sale
               </h1>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <div className="justify-between space-y-4">
               <Autocomplete
                 open={open}
                 color="light"
@@ -256,7 +256,7 @@ const CreateSales = () => {
               >
                 Submit
               </Button>
-            </Grid>
+              </div>
           </BGrid>
         </form>
         

@@ -1,5 +1,5 @@
 //create sales page
-import React from "react";
+import React, { use } from "react";
 import {
   Autocomplete,
   Button,
@@ -75,6 +75,10 @@ const EditSales = () => {
     //setLoading(false);
   }, [saleId]);
 
+  // useEffect(() => {
+  //   setFieldValue("productId", productId);
+  // }, [productId]);
+
   async function getProducts() {
     await axios
       .get(process.env.APIURL + "/products", {
@@ -104,13 +108,14 @@ const EditSales = () => {
             id: res.data.id,
             productId: res.data.productId,
             quantity: res.data.quantity,
-            price: res.data.price,
+            price: res.data.price.toFixed(2),
             saleDate: dayjs(res.data.saleDate).format("YYYY-MM-DD"),
             dateTimeCreated: res.data.dateTimeCreated,
             dateTimeUpdated: res.data.dateTimeUpdated,
           });
 
           setProductId(res.data.productId);
+          formik.setFieldValue("productId", res.data.productId);
           setSelectedOption(
             options.find((option) => option.id === res.data.productId)
           );
@@ -147,7 +152,7 @@ const EditSales = () => {
       setIsSubmitting(true);
       console.log(values);
       await axios
-        .put(process.env.APIURL + "/sales", values, {
+        .put(process.env.APIURL + "/sales/"+saleId, values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -157,7 +162,6 @@ const EditSales = () => {
           //console.log(res);
           if (res.status == 200) {
             openSnackbar("Sales updated successfully", "success");
-            formik.resetForm();
           } else {
             openSnackbar(res.data.message, "error");
           }
@@ -183,6 +187,8 @@ const EditSales = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <Autocomplete
+            id="productId"
+            name="productId"
               open={open}
               color="light"
               onOpen={() => {
