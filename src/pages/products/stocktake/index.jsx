@@ -3,7 +3,7 @@ import Button from "@/components/ui/Button";
 import { Height } from "@mui/icons-material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { QrReader } from "react-qr-reader";
+import QrScanner from 'qr-scanner'; 
 const Stocktake = () => {
   const [result, setResult] = useState("No result");
   const [selected, setSelected] = useState("environment");
@@ -33,7 +33,7 @@ const Stocktake = () => {
     <Layout>
       <div className="p-1">
       {/* <div> */}
-          <QrReader
+          <QrScanner
           scanDelay="100" 
           facingMode="environment"
           //containerStyle={{ "padding-top":"0px" }}
