@@ -7,6 +7,7 @@ import axios, { all } from "axios";
 import SortableTable from "@/components/ui/SortableTable";
 import PieChart from "@/components/ui/PieChart";
 import { Typography } from "@mui/material";
+import LineChart from "@/components/ui/LineChart";
 
 
 const Dashboard = () => {
@@ -73,11 +74,14 @@ const Dashboard = () => {
 
   return (
     <Layout>
-      <div className="grid grid-cols-1 gap-2 ">
+         
+
+      <div className="grid grid-cols-2 gap-2 ">
+      {/* <div className="flex flex-col"> */}
         {/* <div className="col-span-6">
           <TopCard />
         </div> */}
-        <div className="col-span-6">
+        <div className="">
           <Card title="Total Gross profit" value={totalGrossProfit} icon={<AttachMoney />} />
           <Card title="Total revenue" value={totalRevenue} icon={<Paid />} />
           <Card title="Total revenue last week" value={totalRevenueLastWeek} icon={<Sell />} />
@@ -87,11 +91,14 @@ const Dashboard = () => {
         </div> */}
         {/* <SortableTable headers={headers} /> */}
        
-      </div>
-      <div className="col-span-12 h-56 ">
+      
+      <div className="md:col-span-6">
           <PieChart />
         </div>
-      
+        <div className="md:col-span-6">
+        <LineChart />
+        </div>
+        </div>
     </Layout>
   );
 };
