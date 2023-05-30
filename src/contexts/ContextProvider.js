@@ -1,6 +1,7 @@
 import Snackbar from '@/components/ui/Snackbar';
 import UniversalModal from '@/components/ui/UniversalModal';
-import React, { createContext, useContext, useState } from 'react';
+import axios from 'axios';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const StateContext = createContext();
 
@@ -31,7 +32,37 @@ export const ContextProvider = ({ children }) => {
     actions: [],
   });
 
-  
+  //Authentication context provider
+  const [authenticated, setAuthenticated] = useState(false)
+
+  // Simulate authentication check
+  useEffect(() => {
+    // Your authentication logic goes here
+    const isAuthenticated = checkAuthentication()
+
+    if (!isAuthenticated) {
+      router.push('/login') // Redirect to login page
+    } else {
+      setAuthenticated(true)
+    }
+  }, [])
+
+  //check authentication
+  const checkAuthentication = async () => {
+    // Your authentication logic goes here
+    const sessionuser = localStorage.getItem("session_user");
+    console.log(sessionuser);
+    const user = await axios
+          .post(process.env.AUTHURL + "/checkauth", sessionuser.userId)
+          .then((res) => {
+            if (res.data.success == true) {
+              return true;
+            }
+          });
+
+    return false;
+
+  }
 
   const openSnackbar = (message, severity) => {
     setSnackbarMessage(message);
