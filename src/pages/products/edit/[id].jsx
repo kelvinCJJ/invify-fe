@@ -27,7 +27,6 @@ const EditProduct = () => {
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  //const [loading, setLoading] = useState(true);
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,30 +34,29 @@ const EditProduct = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const productId = router.query.id;
   
+  // useEffect(() => {
+  //   getCategories();
+  // }, []);
 
-  useEffect(() => {
-    getCategories();
-  }, []);
+  // useEffect(() => {
+  //   let active = true;
 
-  useEffect(() => {
-    let active = true;
+  //   if (!loading) {
+  //     return undefined;
+  //   }
 
-    if (!loading) {
-      return undefined;
-    }
+  //   (async () => {
+  //     //getCategories();
 
-    (async () => {
-      //getCategories();
+  //     if (active) {
+  //       setOptions(categories);
+  //     }
+  //   })();
 
-      if (active) {
-        setOptions(categories);
-      }
-    })();
-
-    return () => {
-      active = false;
-    };
-  }, [categories, loading]);
+  //   return () => {
+  //     active = false;
+  //   };
+  // }, [categories, loading]);
 
   // useEffect(() => {
   //   if (!open) {
@@ -66,68 +64,152 @@ const EditProduct = () => {
   //   }
   // }, [open]);
 
+  // useEffect(() => {
+  //   setLoading(true);
+  //   if (productId) {
+  //     getCategories();
+  //     getProduct();
+  //     getInventory();
+  //   }
+  // }, [productId]);
+  
+  // async function getCategories() {
+  //   await axios
+  //     .get(process.env.APIURL + "/categories", {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: "Bearer " + localStorage.getItem("token"),
+  //       },
+  //     })
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       //setCategories(res.data);
+  //       setOptions(res.data);
+  //     });
+  //   setLoading(false);
+  // }
+
+  // const getProduct = async () => {
+  //   try {
+  //     await axios
+  //       .get(process.env.APIURL + "/products/" + productId, {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: "Bearer " + localStorage.getItem("token"),
+  //         },
+  //       })
+  //       .then((res) => {
+  //         console.log(res);
+  //         formik.setValues({
+  //           id: res.data.id,
+  //           name: res.data.name,
+  //           sku: res.data.sku,
+  //           description: res.data.description,
+  //           price: res.data.price.toFixed(2),
+  //           cost: res.data.cost.toFixed(2),
+  //           categoryId: res.data.categoryId,
+  //           dateTimeCreated: res.data.dateTimeCreated,
+  //           dateTimeUpdated: res.data.dateTimeUpdated,
+  //         });
+  //         setCategoryId(res.data.categoryId);
+  //         // setSelectedOption(options.find((option) => option.id === res.data.categoryId)) ? options.find((option) => option.id === res.data.categoryId).name : null;
+  //         setSelectedOption(options.find((option) => option.id === res.data.categoryId));
+          
+         
+  //       })
+  //       .catch((err) => {
+  //         openSnackbar(err.response.data.message, "error");
+  //       })
+  //   } catch (error) {
+  //     console.log(error);
+  //     openSnackbar("error", "error");
+  //   }
+  //   setLoading(false);
+  // };
+
+  // const getInventory = async () => {
+  //   try {
+  //     await axios
+  //       .get(process.env.APIURL + "/inventories/" + productId, {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: "Bearer " + localStorage.getItem("token"),
+  //         },
+  //       })
+  //       .then((res) => {
+  //         console.log(res);
+  //         formik.setValues({
+  //           quantity: res.data.quantity,
+  //           restockLevel: res.data.restockLevel,
+  //         });
+  //         //setLoading(false);
+  //       })
+  //       .catch((err) => {
+  //         openSnackbar(err.response.data.message, "error");
+  //       })
+  //   } catch (error) {
+  //     console.log(error);
+  //     openSnackbar("error", "error");
+  //   }
+  //   setLoading(false);
+  // };
+
   useEffect(() => {
+    setLoading(true);
     if (productId) {
-      getProduct();
+      fetchData();
     }
-    //setLoading(false);
   }, [productId]);
   
-  async function getCategories() {
-    await axios
-      .get(process.env.APIURL + "/categories", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        //setCategories(res.data);
-        setOptions(res.data);
-      });
-  }
-
-  const getProduct = async () => {
+  const fetchData = async () => {
     try {
-      await axios
-        .get(process.env.APIURL + "/products/" + productId, {
+      const [categoriesRes, productRes, inventoryRes] = await Promise.all([
+        axios.get(process.env.APIURL + "/categories", {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
-        })
-        .then((res) => {
-          console.log(res);
-          formik.setValues({
-            id: res.data.id,
-            name: res.data.name,
-            sku: res.data.sku,
-            description: res.data.description,
-            price: res.data.price.toFixed(2),
-            cost: res.data.cost.toFixed(2),
-            categoryId: res.data.categoryId,
-            dateTimeCreated: res.data.dateTimeCreated,
-            dateTimeUpdated: res.data.dateTimeUpdated,
-          });
-          setCategoryId(res.data.categoryId);
-          // setSelectedOption(options.find((option) => option.id === res.data.categoryId)) ? options.find((option) => option.id === res.data.categoryId).name : null;
-          setSelectedOption(options.find((option) => option.id === res.data.categoryId));
-          setLoading(false);
-         
-        })
-        .catch((err) => {
-          openSnackbar(err.response.data.message, "error");
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+        }),
+        axios.get(process.env.APIURL + "/products/" + productId, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }),
+        axios.get(process.env.APIURL + "/inventories/" + productId, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }),
+      ]);
+  
+      setOptions(categoriesRes.data);
+  
+      formik.setValues({
+        id: productRes.data.id,
+        name: productRes.data.name,
+        sku: productRes.data.sku,
+        description: productRes.data.description,
+        price: productRes.data.price.toFixed(2),
+        cost: productRes.data.cost.toFixed(2),
+        categoryId: productRes.data.categoryId,
+        dateTimeCreated: productRes.data.dateTimeCreated,
+        dateTimeUpdated: productRes.data.dateTimeUpdated,
+        quantity: inventoryRes.data.quantity,
+        restockLevel: inventoryRes.data.restockLevel,
+      });
+      setCategoryId(productRes.data.categoryId);
+      setSelectedOption(
+        options.find((option) => option.id === productRes.data.categoryId)
+      );
     } catch (error) {
       console.log(error);
       openSnackbar("error", "error");
     }
+    setLoading(false);
   };
-
+  
 
 
   const validationSchema = Yup.object({
@@ -153,6 +235,8 @@ const EditProduct = () => {
       categoryId: 1,
       dateTimeCreated: "",
       dateTimeUpdated: "",
+      quantity: 0,
+      restockLevel: 0,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -189,7 +273,12 @@ const EditProduct = () => {
     },
   });
 
-  return (
+  if (loading) {
+    return 'loading...';
+  }
+
+  return (   
+
     <Layout>
       <form onSubmit={formik.handleSubmit}>
         <BGrid>
@@ -288,6 +377,7 @@ const EditProduct = () => {
                 error={formik.touched.cost && Boolean(formik.errors.cost)}
                 helperText={formik.touched.cost && formik.errors.cost}
               />
+
               <Autocomplete
                 open={open}
                 color="light"
@@ -330,6 +420,40 @@ const EditProduct = () => {
                     }}
                   />
                 )}
+              />
+              
+              {/*Product Quantity and restock level */}
+              <TextField
+                required
+                fullWidth
+                id="quantity"
+                name="quantity"
+                label="Quantity"
+                placeholder="0"
+                variant="filled"
+                margin="normal"
+                color="light"
+                className=" bg-darkaccent-800 rounded-lg"
+                value={formik.values.quantity}
+                onChange={formik.handleChange}
+                error={formik.touched.quantity && Boolean(formik.errors.quantity)}
+                helperText={formik.touched.quantity && formik.errors.quantity}
+              />
+              <TextField
+                required
+                fullWidth
+                id="restockLevel"
+                name="restockLevel"
+                label="Restock Level"
+                placeholder="50"
+                variant="filled"
+                margin="normal"
+                color="light"
+                className=" bg-darkaccent-800 rounded-lg"
+                value={formik.values.restockLevel}
+                onChange={formik.handleChange}
+                error={formik.touched.restockLevel && Boolean(formik.errors.restockLevel)}
+                helperText={formik.touched.restockLevel && formik.errors.restockLevel}
               />
               <Button
                 type="submit"

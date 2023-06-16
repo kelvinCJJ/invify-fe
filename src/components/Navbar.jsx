@@ -1,5 +1,5 @@
 import { div, IconButton, Tooltip, useTheme } from "@mui/material";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 // import { ColorModeContext, tokens } from "../../theme";
 import InputBase from "@mui/material/InputBase";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
@@ -97,14 +97,7 @@ const Navbar = ({ username }) => {
     }
   }
 
-  // useEffect(() => {
-  //   const currentThemeColor = localStorage.getItem("colorMode");
-  //   const currentThemeMode = localStorage.getItem("themeMode");
-  //   if (currentThemeColor && currentThemeMode) {
-  //     setCurrentColor(currentThemeColor);
-  //     setCurrentMode(currentThemeMode);
-  //   }
-  // }, []);
+  
 
   const handleActiveMenu = () => setActiveMenu(!activeMenu);
 
@@ -117,8 +110,10 @@ const Navbar = ({ username }) => {
           addDot="false"
           icon={<Menu />}
         />
-        <div className="self-center" >
-          <h1 className="text-base">Welcome back, <strong>{username}</strong></h1>
+        <div className="self-center">
+          <h1 className="text-base">
+            Welcome back, <strong>{username}</strong>
+          </h1>
         </div>
       </div>
       <div className="flex mx-3 my-1 space-x-3">

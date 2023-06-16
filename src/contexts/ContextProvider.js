@@ -32,37 +32,44 @@ export const ContextProvider = ({ children }) => {
     actions: [],
   });
 
-  //Authentication context provider
-  const [authenticated, setAuthenticated] = useState(false)
+  // //get session user
+  // const sessionuser = localStorage.getItem("session_user");
 
-  // Simulate authentication check
-  useEffect(() => {
-    // Your authentication logic goes here
-    const isAuthenticated = checkAuthentication()
+  // //Authentication context provider
+  // const [authenticated, setAuthenticated] = useState(false)
 
-    if (!isAuthenticated) {
-      router.push('/login') // Redirect to login page
-    } else {
-      setAuthenticated(true)
-    }
-  }, [])
+  // // Simulate authentication check
+  // useEffect(() => {
+  //   // Your authentication logic goes here
+  //   const isAuthenticated = checkAuthentication()
 
-  //check authentication
-  const checkAuthentication = async () => {
-    // Your authentication logic goes here
-    const sessionuser = localStorage.getItem("session_user");
-    console.log(sessionuser);
-    const user = await axios
-          .post(process.env.AUTHURL + "/checkauth", sessionuser.userId)
-          .then((res) => {
-            if (res.data.success == true) {
-              return true;
-            }
-          });
+  //   if (!isAuthenticated) {
+  //     router.push('/login') // Redirect to login page
+  //   } else {
+  //     setAuthenticated(true)
+  //   }
+  // }, [sessionuser])
 
-    return false;
+  // //check authentication
+  // const checkAuthentication = async () => {
+  //   // Your authentication logic goes here
+  //   //const sessionuser = localStorage.getItem("session_user");
+  //   console.log(sessionuser.userId);
+  //   const user = await axios
+  //         .post(process.env.AUTHURL + "/checkauth",{userId: sessionuser.userId})
+  //         .then((res) => {
+  //           if (res.data.success == true) {
+  //             return true;
+  //           }
+  //         })
+  //         .catch((err) => {
+  //           console.log(err);
+  //           return false;
+  //         });
 
-  }
+  //   return false;
+
+  // }
 
   const openSnackbar = (message, severity) => {
     setSnackbarMessage(message);
@@ -74,7 +81,7 @@ export const ContextProvider = ({ children }) => {
     setSnackbarOpen(false);
     setSnackbarMessage('');
     setSnackbarSeverity('info');
-    console.log('closeSnackbar');
+    //console.log('closeSnackbar');
   };
 
   const openModal = (props) => setModalProps({ ...props, open: true });
@@ -90,7 +97,7 @@ export const ContextProvider = ({ children }) => {
      snackbarOpen, setSnackbarOpen, snackbarMessage, setSnackbarMessage, snackbarSeverity, setSnackbarSeverity, openSnackbar, closeSnackbar,
      openModal, closeModal}}>
       {children}
-      <Snackbar open={snackbarOpen} message={snackbarMessage} severity={snackbarSeverity} onClose={closeSnackbar} />
+      <Snackbar autoHideDuration={200} open={snackbarOpen} message={snackbarMessage} severity={snackbarSeverity} onClose={closeSnackbar} />
       <UniversalModal {...modalProps} onClose={closeModal}  />
     </StateContext.Provider>
   );
