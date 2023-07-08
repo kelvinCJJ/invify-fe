@@ -8,8 +8,12 @@ import {
   Dashboard,
   Inventory2,
   LogoutOutlined,
+  ReceiptLong,
   Settings,
+  Shop,
+  Shop2,
   VerifiedUser,
+  Warehouse,
 } from "@mui/icons-material";
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
@@ -31,8 +35,7 @@ import ActiveLink from "./ui/ActiveLink";
 
 const Sidebar = ({ children, auth }) => {
   const theme = useTheme();
-  //const colors = tokens(theme.palette.mode);
-  const { currentColor, activeMenu, setActiveMenu, screenSize } =
+  const { activeMenu, setActiveMenu, screenSize } =
     useStateContext();
 
   const handleCloseSideBar = () => {
@@ -64,8 +67,8 @@ const Sidebar = ({ children, auth }) => {
                 className= {normalLink}  
                 //className="flex flex-row space-x-3 hover:bg-pastel-blue hover:text-gray-100 content-center cursor-pointer  p-3 m-3 rounded-lg text-xs lg:text-base "
               >
-                <Dashboard className="" />
-                <p className="">Dashboard</p>
+                <Dashboard  />
+                <p >Dashboard</p>
               </ActiveLink>
 
               <ActiveLink
@@ -74,17 +77,8 @@ const Sidebar = ({ children, auth }) => {
                 activeClassName={activeLink}
                 className= {normalLink}                
               >
-                <Inventory2 className="" />
-                <p className="">Products</p>
-              </ActiveLink>
-              <ActiveLink
-                href="/categories"
-                onClick={handleCloseSideBar}
-                activeClassName={activeLink}
-                className= {normalLink}                
-              >
-                <Category className="" />
-                <p className="">Categories</p>
+                <Inventory2  />
+                <p >Products</p>
               </ActiveLink>
               <ActiveLink
                 href="/sales"
@@ -92,17 +86,45 @@ const Sidebar = ({ children, auth }) => {
                 activeClassName={activeLink}
                 className= {normalLink}                
               >
-                <ReceiptOutlinedIcon className="" />
-                <p className="">Sales</p>
+                <Shop  />
+                <p >Sales</p>
               </ActiveLink>
+              <ActiveLink
+                href="/categories"
+                onClick={handleCloseSideBar}
+                activeClassName={activeLink}
+                className= {normalLink}                
+              >
+                <Category  />
+                <p >Categories</p>
+              </ActiveLink>
+              <ActiveLink
+                href="/suppliers"
+                onClick={handleCloseSideBar}
+                activeClassName={activeLink}
+                className= {normalLink}                
+              >
+                <Warehouse/>
+                <p>Suppliers</p>
+              </ActiveLink>
+              <ActiveLink
+                href="/purchases"
+                onClick={handleCloseSideBar}
+                activeClassName={activeLink}
+                className= {normalLink}                
+              >
+                <ReceiptOutlinedIcon  />
+                <p >Purchases</p>
+              </ActiveLink>
+              
               <ActiveLink
                 href="/analytics"
                 onClick={handleCloseSideBar}
                 activeClassName={activeLink}
                 className= {normalLink}                
               >
-                <AnalyticsOutlined className="" />
-                <p className="">Analytics</p>
+                <AnalyticsOutlined  />
+                <p >Analytics</p>
               </ActiveLink>
             </div>
             

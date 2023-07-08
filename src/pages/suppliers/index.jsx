@@ -11,7 +11,7 @@ import { useStateContext } from "@/contexts/ContextProvider";
 import { Add } from "@mui/icons-material";
 import dayjs from "dayjs";
 
-function Supplier() {
+function Suppliers() {
   const router = useRouter();
   const [headData, setHeadData] = useState([]);
   const [rowData, setRowData] = useState([]);
@@ -22,7 +22,7 @@ function Supplier() {
   const headers = [
     // { id: "id", label: "Id", disablePadding: false, numeric: false },
     { id: "name", label: "Company Name", disablePadding: false, numeric: false },
-    { id: "contactname", label: "Contact Person", disablePadding: false, numeric: false, },
+    { id: "contactName", label: "Contact Person", disablePadding: false, numeric: false, },
     { id: "phone", label: "Phone", disablePadding: false, numeric: false },
     { id: "email", label: "Email", disablePadding: false, numeric: false },
   ];
@@ -32,30 +32,29 @@ function Supplier() {
   };
 
   useEffect(() => {
-    getSuppliers();
-    setHeadData(headers);
-  }, []);
-
-  async function getSuppliers() {
-    try {
-      await axios
-        .get(process.env.APIURL + "/suppliers", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-           console.log(res.data);
-          setRowData(res.data);
-          //console.log(rowData);
-          setLoading(false);
-        });
-    } catch (err) {
-      //console.log(err);
-      openSnackbar("err", "error");
+    async function getSuppliers() {
+      try {
+        await axios
+          .get(process.env.APIURL + "/suppliers", {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          })
+          .then((res) => {
+             console.log(res.data);
+            setRowData(res.data);
+            setLoading(false);
+          });
+      } catch (err) {
+        openSnackbar("err", "error");
+      }
     }
-  }
+
+    getSuppliers();
+  }, [openSnackbar]);
+
+  
 
   return (
     <Layout>
@@ -68,7 +67,7 @@ function Supplier() {
         </Button>
       </div>
       <SortableTable
-        headers={headData}
+        headers={headers}
         rows={rowData}
         pageurl={"/suppliers"}
         onDelete={handleDelete}
@@ -77,4 +76,4 @@ function Supplier() {
   );
 }
 
-export default Supplier;
+export default Suppliers;

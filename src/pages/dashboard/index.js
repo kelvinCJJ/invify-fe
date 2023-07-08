@@ -8,54 +8,63 @@ import SortableTable from "@/components/ui/SortableTable";
 import PieChart from "@/components/ui/PieChart";
 import { Typography } from "@mui/material";
 import LineChart from "@/components/ui/LineChart";
+import DateRangePicker from "@/components/ui/DateRangePicker";
+
 
 const Dashboard = () => {
   console.log("dashboard");
   const [loading, setLoading] = React.useState(false);
-  const [totalRevenue, setTotalRevenue] = React.useState(0);
+  const [totalRevenueCurrentYear, setTotalRevenueCurrentYear] = React.useState(0);
   const [totalRevenueLastWeek, setTotalRevenueLastWeek] = React.useState(0);
   const [totalGrossProfit, setTotalGrossProfit] = React.useState(0);
   const [totalSalesLastMonth, setTotalSalesLastMonth] = React.useState([]);
   const [totalProducts, setTotalProducts] = React.useState(0);
-  const [datas, setDatas] = React.useState([
-    setTotalRevenue,
-    setTotalRevenueLastWeek,
-    setTotalGrossProfit,
-    setTotalProducts,
-  ]);
 
-  const requestUrls = [
-    "/sales/totalrevenue/lastmonth",
-    "/sales/totalrevenue/lastweek",
-    "/sales/totalgrossprofit/lastmonth",
-    "/sales/lastmonth",
-  ];
+ 
+
+useEffect(() => {
 
   const fetchAll = async () => {
+    setLoading(true);
+    const thisYear = new Date().getFullYear()+'-01-01';
+    const thisMonth = new Date().getMonth();
+    const startDateLastWeek = new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const dateToday = new Date().toISOString().split('T')[0];
+    const requestUrls = [
+      '/analytics/totalrevenue?startDate='+thisYear+'&endDate='+dateToday,
+      '/analytics/totalrevenue?startDate='+startDateLastWeek+'&endDate='+dateToday,
+      '/analytics/totalgrossprofit?startDate='+thisYear+'&endDate='+dateToday,
+      // '/analytics/GetTotalGrossProfitByTimePeriod?startDate=${startDate}&endDate=${endDate}',
+      '/analytics/totalgrossprofit?startDate='+thisYear+'&endDate='+dateToday
+    ];
+
     const requests = requestUrls.map((url) =>
       axios.get(process.env.APIURL + url)
     );
     axios.all(requests).then(
       axios.spread(function (
-        totalrevenue,
-        totalrevenuelastweek,
-        totalgrossprofit,
-        totalsaleslastmonth
+        totalRevenueCurrentYear,
+        totalRevenueLastWeek,
+        totalGrossprofit,
+        totalSalesLastMonth
         //totalproducts
       ) {
-        setTotalRevenue(totalrevenue.data);
-        setTotalRevenueLastWeek(totalrevenuelastweek.data);
-        setTotalGrossProfit(totalgrossprofit.data);
-        setTotalSalesLastMonth(totalsaleslastmonth.data);
+        setTotalRevenueCurrentYear(totalRevenueCurrentYear.data);
+        setTotalRevenueLastWeek(totalRevenueLastWeek.data);
+        setTotalGrossProfit(totalGrossprofit.data);
+        setTotalSalesLastMonth(totalSalesLastMonth.data);
         //setTotalProducts(totalproducts.data);
-        console.log(totalrevenue.data);
-        console.log(totalrevenuelastweek.data);
-        console.log(totalgrossprofit.data);
-        console.log(totalsaleslastmonth.data);
+        console.log(totalRevenueCurrentYear.data);
+        console.log(totalRevenueLastWeek.data);
+        console.log(totalGrossprofit.data);
+        console.log(totalSalesLastMonth.data);
         //console.log(totalproducts.data);
       })
     );
+
   };
+  fetchAll();
+}, []);
 
   const headers = [
     // { id: "id", label: "Id", disablePadding: false, numeric: false },
@@ -75,43 +84,36 @@ const Dashboard = () => {
     },
   ];
 
-  useEffect(() => {
-    setLoading(true);
-    fetchAll();
-    setLoading(false);
-  }, [loading]);
+
 
   return (
     <Layout>
-      <div className="grid grid-cols-2 gap-2 ">
+      <div className="flex flex-row justify-end">
+       <DateRangePicker />
+      </div>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-2">
         {/* <div className="flex flex-col"> */}
         {/* <div className="col-span-6">
           <TopCard />
         </div> */}
-        <div className="">
           <Card
             title="Total Gross profit"
             value={totalGrossProfit}
             icon={<AttachMoney />}
           />
-          <Card title="Total revenue" value={totalRevenue} icon={<Paid />} />
+          <Card title="Total revenue" value={totalRevenueCurrentYear} icon={<Paid />} />
           <Card
             title="Total revenue last week"
             value={totalRevenueLastWeek}
             icon={<Sell />}
           />
-        </div>
         {/* <div className="col-span-12">
           <Card title="test" value={totalSalesLastMonth} icon={<Shop />} />
         </div> */}
         {/* <SortableTable headers={headers} /> */}
 
-        <div className="md:col-span-6">
           <PieChart />
-        </div>
-        <div className="md:col-span-6">
           <LineChart />
-        </div>
       </div>
     </Layout>
   );

@@ -11,20 +11,20 @@ import { useStateContext } from "@/contexts/ContextProvider";
 import { Add } from "@mui/icons-material";
 import dayjs from "dayjs";
 
-function Sales() {
+function Purchases() {
+  const router = useRouter();
   const [headData, setHeadData] = useState([]);
   const [rowData, setRowData] = useState([]);
   const [isLoading, setLoading] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]);
+  const [purchases, setPurchases] = useState([]);
   const { snackbarOpen, openSnackbar, openModal } = useStateContext();
 
   const headers = [
     // { id: "id", label: "Id", disablePadding: false, numeric: false },
-    { id: "product", label: "Product", disablePadding: false, numeric: false },
-    { id: "quantity", label: "Quantity", disablePadding: false, numeric: false, },
-    { id: "price", label: "Price($)", disablePadding: false, numeric: false },
-    { id: "saleDate", label: "Sale Date", disablePadding: false, numeric: false },
+    { id: "name", label: "Company Name", disablePadding: false, numeric: false },
+    { id: "contactname", label: "Contact Person", disablePadding: false, numeric: false, },
+    { id: "phone", label: "Phone", disablePadding: false, numeric: false },
+    { id: "email", label: "Email", disablePadding: false, numeric: false },
   ];
   
   const handleDelete = (rowId) => {
@@ -32,35 +32,14 @@ function Sales() {
   };
 
   useEffect(() => {
-    getProducts();
+    getSuppliers();
     setHeadData(headers);
   }, []);
-  
-  useEffect(() => {
-    if (products.length > 0) {
-      getSales();
-    }
-  }, [products]);
-  
-  async function getProducts() {
-    await axios
-      .get(process.env.APIURL + "/products", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      })
-      .then((res) => {
-        //console.log(res.data);
-        setProducts(res.data);
-        //getSales();
-      });
-  }
 
-  async function getSales() {
+  async function getSuppliers() {
     try {
       await axios
-        .get(process.env.APIURL + "/sales", {
+        .get(process.env.APIURL + "/suppliers", {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -68,23 +47,10 @@ function Sales() {
         })
         .then((res) => {
            console.log(res.data);
-           console.log(products);
-           //console.log(categories);
-           res.data.map((sales) => {
-            if(products.length > 0){
-            sales.product = products.find(
-              (product) => product.id === sales.productId
-            ).name;
-            }
-            sales.saleDate = new dayjs(sales.saleDate).format("DD/MM/YYYY");
-
-          });
           setRowData(res.data);
-          //console.log(rowData);
           setLoading(false);
         });
     } catch (err) {
-      //console.log(err);
       openSnackbar("err", "error");
     }
   }
@@ -94,19 +60,19 @@ function Sales() {
       <div className="my-2">
       </div>
       <div className="flex flex-row ">
-        <Button variant="contained" href="/sales/create">
+        <Button variant="contained" href="/suppliers/create">
           <Add />
-          New Sales
+          New Supplier
         </Button>
       </div>
       <SortableTable
         headers={headData}
         rows={rowData}
-        pageurl={"/sales"}
+        pageurl={"/suppliers"}
         onDelete={handleDelete}
       />
     </Layout>
   );
 }
 
-export default Sales;
+export default Suppliers;

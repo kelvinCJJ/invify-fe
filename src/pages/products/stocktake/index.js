@@ -131,20 +131,12 @@ const Stocktake = () => {
     <Layout>
       <h2>Inventory Scanning</h2>
       <div className="p-1">
-        {/* <div> */}
         <QrReader
           delay={500}
           onError={handleError}
           onScan={handleScan}
           style={{ width: "100%" }}
         />
-        {/* <QrScanner
-          scanDelay={300}
-          onDecode={handleScan}
-          //onResult={handleScan}
-          onError={handleError}
-
-      />        */}
       </div>
       <div>
         <h3>Scanned Inventory</h3>

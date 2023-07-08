@@ -2,7 +2,7 @@ import React from 'react';
 import { Button as MuiButton } from '@mui/material';
 
 const Button = ({ severity, children, ...props }) => {
-    let className = 'text-sm  md:text-base px-6 py-3 rounded-md normal-case'
+    let className = 'px-4 py-2 text-xs  md:text-base md:px-6 md:py-3 rounded-md normal-case'
   
     switch (severity) {
       case 'error':

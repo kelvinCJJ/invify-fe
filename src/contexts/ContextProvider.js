@@ -32,45 +32,6 @@ export const ContextProvider = ({ children }) => {
     actions: [],
   });
 
-  // //get session user
-  // const sessionuser = localStorage.getItem("session_user");
-
-  // //Authentication context provider
-  // const [authenticated, setAuthenticated] = useState(false)
-
-  // // Simulate authentication check
-  // useEffect(() => {
-  //   // Your authentication logic goes here
-  //   const isAuthenticated = checkAuthentication()
-
-  //   if (!isAuthenticated) {
-  //     router.push('/login') // Redirect to login page
-  //   } else {
-  //     setAuthenticated(true)
-  //   }
-  // }, [sessionuser])
-
-  // //check authentication
-  // const checkAuthentication = async () => {
-  //   // Your authentication logic goes here
-  //   //const sessionuser = localStorage.getItem("session_user");
-  //   console.log(sessionuser.userId);
-  //   const user = await axios
-  //         .post(process.env.AUTHURL + "/checkauth",{userId: sessionuser.userId})
-  //         .then((res) => {
-  //           if (res.data.success == true) {
-  //             return true;
-  //           }
-  //         })
-  //         .catch((err) => {
-  //           console.log(err);
-  //           return false;
-  //         });
-
-  //   return false;
-
-  // }
-
   const openSnackbar = (message, severity) => {
     setSnackbarMessage(message);
     setSnackbarSeverity(severity);

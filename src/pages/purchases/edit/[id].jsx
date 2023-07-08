@@ -1,5 +1,5 @@
 //add product page
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import {
   Autocomplete,
   Button,
@@ -18,77 +18,72 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import BGrid from "@/components/ui/BGrid";
 import { useStateContext } from "@/contexts/ContextProvider";
+import { useEffect } from "react";
 import * as Yup from "yup";
 
-const EditProduct = () => {
+const EditPurchase = () => {
   const router = useRouter();
-
   const { openSnackbar } = useStateContext();
-  const openSnackbarRef = useRef(openSnackbar);
-
-  const [categoryId, setCategoryId] = useState("");
-  const [data, setData] = useState({});
+  const [supplier, setSupplir] = useState([]);
+  const [supplierId, setSupplierId] = useState();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [open, setOpen] = React.useState(false);
-  const [options, setOptions] = React.useState([]);
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
-  const productId = router.query.id;
-
-  // Update the ref value whenever openSnackbar changes
+  const purchaseId = router.query.id;
+  
   useEffect(() => {
-    openSnackbarRef.current = openSnackbar;
-  }, [openSnackbar]);
-
-  useEffect(() => {
-    console.log(productId);
-    let isCancelled = false;
-    async function fetchData() {
+    
+    const fetchData = async () => {
       try {
-        const [categoriesRes, productRes] = await Promise.all([
-          axios.get(process.env.APIURL + "/categories", {
+        const [suppliersRes, purchasesRes] = await Promise.all([
+          axios.get(process.env.APIURL + "/suppliers", {
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer " + localStorage.getItem("token"),
             },
           }),
-          axios.get(process.env.APIURL + "/products/" + productId, {
+          axios.get(process.env.APIURL + "/purchases/" + purchaseId, {
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer " + localStorage.getItem("token"),
             },
           }),
+         
         ]);
+    
+        setOptions(suppliersRes.data);
+    
+        formik.setValues({
+          id: purchasesRes.data.id,
+          name: purchasesRes.data.product.name,
+          quantity: purchasesRes.data.quantity,
+          price: purchasesRes.data.price.toFixed(2),
+          purchaseDate: purchasesRes.data.purchaseDate,
+          supplierId: purchasesRes.data.supplierId,
+        });
 
-        setOptions(categoriesRes.data);
-        setData(productRes.data);
-
-        const category = categoriesRes.data.find(
-          (category) => category.id === productRes.data.categoryId
+        setSupplierId(purchasesRes.data.supplierId);
+        setSelectedOption(
+          options.find((option) => option.id === purchasesRes.data.supplierId)
         );
-        setSelectedOption(category);
       } catch (error) {
         console.log(error);
-        openSnackbarRef.current('error', 'error');
+        openSnackbar("error", "error");
       }
       setLoading(false);
-    }
-
-    if (!isCancelled) {
-      setLoading(true);
-      fetchData();
-      setLoading(false);
-    }
-    return () => {
-      isCancelled = true;
     };
-  }, [productId]);
 
-  // useEffect(() => {
-  //   if (selectedOption) {
-  //     formik.setFieldValue("categoryId", selectedOption.id);
-  //   }
-  // }, [selectedOption]);
+    
+    if (purchaseId) {
+      fetchData();
+    }
+  }, [formik, openSnackbar, options, purchaseId]);
+  
+  
+  
+
 
   const validationSchema = Yup.object({
     price: Yup.string().test(
@@ -104,25 +99,19 @@ const EditProduct = () => {
   });
 
   const formik = useFormik({
-    initialValues: data || {
+    initialValues: {
       name: "",
-      sku: "",
-      description: "",
-      price: 0,
-      cost: 0,
-      categoryId: 1,
-      dateTimeCreated: "",
-      dateTimeUpdated: "",
       quantity: 0,
-      restockLevel: 0,
+      price: 0,
+      purchaseDate: "",
+      supplierId: 1,
     },
-    enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: (values) => {
       setIsSubmitting(true);
       console.log(values);
       axios
-        .put(process.env.APIURL + "/products/" + productId, values, {
+        .put(process.env.APIURL + "/purchases/" + purchaseId, values, {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -132,7 +121,7 @@ const EditProduct = () => {
           console.log(res);
           if (res.status == 200) {
             openSnackbar(
-              "Product [" + values.name + "] updated successfully",
+              "Purchase [" + values.product.name + "] updated successfully",
               "success"
             );
           } else {
@@ -153,16 +142,17 @@ const EditProduct = () => {
   });
 
   if (loading) {
-    return "loading...";
+    return 'loading...';
   }
 
-  return (
+  return (   
+
     <Layout>
       <form onSubmit={formik.handleSubmit}>
         <BGrid>
           <Grid item xs={12}>
             <h1 className="text-xl font-semibold overflow-ellipsis">
-              Edit Product
+              Edit Purchases
             </h1>
           </Grid>
           <Grid item xs={12} md={6}>
@@ -177,9 +167,6 @@ const EditProduct = () => {
                 variant="filled"
                 margin="normal"
                 color="light"
-                InputLabelProps={{
-                  shrink: true,
-                }}
                 className=" bg-darkaccent-800 rounded-lg"
                 value={formik.values.name}
                 onChange={formik.handleChange}
@@ -189,48 +176,18 @@ const EditProduct = () => {
               <TextField
                 required
                 fullWidth
-                id="sku"
-                name="sku"
-                label="SKU"
-                placeholder="e.g. IPHONE12PROMAX"
+                id="quantity"
+                name="quantity"
+                label="Quantity"
+                placeholder="0"
                 variant="filled"
                 margin="normal"
                 color="light"
-                InputLabelProps={{
-                  shrink: true,
-                }}
                 className=" bg-darkaccent-800 rounded-lg"
-                value={formik.values.sku}
+                value={formik.values.quantity}
                 onChange={formik.handleChange}
-                error={formik.touched.sku && Boolean(formik.errors.sku)}
-                helperText={formik.touched.sku && formik.errors.sku}
-              />
-              <TextField
-                required
-                fullWidth
-                id="description"
-                name="description"
-                label="Description"
-                placeholder="e.g. Apple iPhone 12 Pro Max"
-                variant="filled"
-                margin="normal"
-                color="light"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                InputProps={{
-                  multiline: true,
-                }}
-                className=" bg-darkaccent-800 rounded-lg"
-                value={formik.values.description}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.description &&
-                  Boolean(formik.errors.description)
-                }
-                helperText={
-                  formik.touched.description && formik.errors.description
-                }
+                error={formik.touched.quantity && Boolean(formik.errors.quantity)}
+                helperText={formik.touched.quantity && formik.errors.quantity}
               />
               <TextField
                 required
@@ -242,35 +199,12 @@ const EditProduct = () => {
                 variant="filled"
                 margin="normal"
                 color="light"
-                InputLabelProps={{
-                  shrink: true,
-                }}
                 className=" bg-darkaccent-800 rounded-lg"
                 value={formik.values.price}
                 onChange={formik.handleChange}
                 error={formik.touched.price && Boolean(formik.errors.price)}
                 helperText={formik.touched.price && formik.errors.price}
               />
-              <TextField
-                required
-                fullWidth
-                id="cost"
-                name="cost"
-                label="Cost"
-                placeholder="e.g. 800.00"
-                variant="filled"
-                margin="normal"
-                color="light"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                className=" bg-darkaccent-800 rounded-lg"
-                value={formik.values.cost}
-                onChange={formik.handleChange}
-                error={formik.touched.cost && Boolean(formik.errors.cost)}
-                helperText={formik.touched.cost && formik.errors.cost}
-              />
-
               <Autocomplete
                 open={open}
                 color="light"
@@ -280,9 +214,7 @@ const EditProduct = () => {
                 onClose={() => {
                   setOpen(false);
                 }}
-                isOptionEqualToValue={(option, value) =>
-                  value != undefined ? option.id === value.id : false
-                }
+                isOptionEqualToValue={(option, value) => value!=undefined  ? option.id === value.id : false}
                 getOptionLabel={(option) => (option.name ? option.name : "")}
                 options={options}
                 loading={loading}
@@ -316,52 +248,21 @@ const EditProduct = () => {
                   />
                 )}
               />
-
-              {/*Product Quantity and restock level */}
               <TextField
                 required
                 fullWidth
-                id="quantity"
-                name="quantity"
-                label="Quantity"
-                placeholder="0"
+                id="purchaseDate"
+                name="purchaseDate"
+                label="Purchase Date"
+                placeholder="e.g. 2021-01-01"
                 variant="filled"
                 margin="normal"
                 color="light"
-                InputLabelProps={{
-                  shrink: true,
-                }}
                 className=" bg-darkaccent-800 rounded-lg"
-                value={formik.values.quantity}
+                value={formik.values.purchaseDate}
                 onChange={formik.handleChange}
-                error={
-                  formik.touched.quantity && Boolean(formik.errors.quantity)
-                }
-                helperText={formik.touched.quantity && formik.errors.quantity}
-              />
-              <TextField
-                required
-                fullWidth
-                id="restockLevel"
-                name="restockLevel"
-                label="Restock Level"
-                placeholder="50"
-                variant="filled"
-                margin="normal"
-                color="light"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                className=" bg-darkaccent-800 rounded-lg"
-                value={formik.values.restockLevel}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.restockLevel &&
-                  Boolean(formik.errors.restockLevel)
-                }
-                helperText={
-                  formik.touched.restockLevel && formik.errors.restockLevel
-                }
+                error={formik.touched.purchaseDate && Boolean(formik.errors.purchaseDate)}
+                helperText={formik.touched.purchaseDate && formik.errors.purchaseDate}
               />
               <Button
                 type="submit"
@@ -378,4 +279,4 @@ const EditProduct = () => {
   );
 };
 
-export default EditProduct;
+export default EditPurchase;

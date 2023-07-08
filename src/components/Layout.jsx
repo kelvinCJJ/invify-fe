@@ -21,7 +21,7 @@ const jwt = require("jsonwebtoken");
 export default function Layout({ children }) {
   const router = useRouter();
   const path = router.asPath;
-  const[userName, setUserName] = useState('test');
+  const [userName, setUserName] = useState("test");
   const { auth, setAuth } = useState(false);
   const { isTokenExpiredResult, setIsTokenExpiredResult } = useState(false);
   const [open, setOpen] = useState(false);
@@ -37,137 +37,61 @@ export default function Layout({ children }) {
     screenSize,
   } = useStateContext();
 
-
   function isTokenExpired(token) {
     const decodedToken = decode(token);
     const currentTime = Date.now() / 1000;
     return decodedToken.exp < currentTime;
   }
 
-  function currentToken() {
+  //get token
+  function getToken() {
     const token = localStorage.getItem("token");
     return token;
   }
-  
+
+
   //const sessionuser = localStorage.getItem("session_user");
   //Authentication context provider
   const [isAuthenticated, setAuthenticated] = useState(false);
   const [sessionuser, setSessionuser] = useState({});
 
-  //get session user
-  // const initialState = {
-  //   access:
-  //     typeof window !== "undefined"? setSessionuser(localStorage.getItem("session_user")): false,
-  //   //refresh: typeof window !== "undefined" ?  window.localStorage.getItem('refresh') : false,
-  //   isAuthenticated: null,
-  //   user: null,
-  // };
   
-
-  // Simulate authentication check
-  // useEffect(() => {
-  //   // Your authentication logic goes here
-  //   typeof window !== "undefined"? setSessionuser(localStorage.getItem("session_user")): false,
-  //   setAuthenticated(checkAuthentication());
-  //   if (!isAuthenticated) {
-  //     router.push("/login"); // Redirect to login page
-  //   } else {
-  //     setAuthenticated(true);
-  //   }
-  // }, []);
-
-  // //check authentication
-  // const checkAuthentication = () => {
-  //   // Your authentication logic goes here
-  //   //const sessionuser = localStorage.getItem("session_user");
-  //   console.log(sessionuser);
-  //   const user = axios
-  //     .post(process.env.AUTHURL + "/checkauth", {
-  //       userId: sessionuser.userId,
-  //     })
-  //     .then((res) => {
-  //       if (res.data.success == true) {
-  //         return true;
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       return false;
-  //     });
-
-  //   return false;
-  // };
-
-  async function getAuth() {
-    try {      
-      const token = currentToken();
-      const isTokenExpiredResult = isTokenExpired(token);
-      console.log("tokenexpired: " + isTokenExpiredResult);
-      if (token && isTokenExpiredResult) {
-        const user = await axios
-          .post(process.env.APIURL + "auth/login", values)
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.success == true && res.data.value) {
-              const Uservalue = res.data.value;
-              localStorage.setItem("session_user", Uservalue);
-              localStorage.setItem("token", res.data.value.token);
-              const tokenJson = jwt.verify(
-                res.data.value.token,
-                process.env.JWT_SECRET
-              );
-              console.log(tokenJson);
-              setAuth(true);
-              router.push("/dashboard");
-            } else {
-              setAuth(false);
-            }
-          });
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
 
   const getUsername = () => {
-    const user = localStorage.getItem('session_user') ? JSON.parse(localStorage.getItem('session_user')) : null;
+    const user = localStorage.getItem("session_user")
+      ? JSON.parse(localStorage.getItem("session_user"))
+      : null;
     if (!user) {
-        return;
+      return;
     }
     setUserName(user.userName);
-}
-
+  };
 
   useEffect(() => {
+    //console.log("useEffect");
+    function getAuth() {
+      try {
+        const token = getToken();
+        if (!token) {
+          router.push("/login");
+          return;
+        }
+        const isTokenExpiredResult = isTokenExpired(token);
+        //console.log("tokenexpired: " + isTokenExpiredResult);
+        if (isTokenExpiredResult) {
+          router.push("/login");
+        } else {
+          setAuthenticated(true);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    
     getAuth();
     getUsername();
-  }, []);
-    // if (router.query.snackbar) {
-    //   setSnackbarMessage(router.query.snackbar);
-    //   setSeverity("success");
-    //   setOpen(true);
-    //   router.pathname = router.pathname.split("?")[0];
-    // }
-    // }, [router.query.snackbar]);
+  }, [router]);
 
-  
-    // const handleClose = (event, reason) => {
-    //   if (reason === "clickaway") {
-    //     return;
-    //   }
-  
-    //   setOpen(false);
-    // };
-
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error</p>;
-
-  // if (!auth) {
-  //   console.log("no auth");
-  //   router.push("/login");
-  // }
-  
-  
   return (
     <>
       <div className="flex ">
@@ -193,7 +117,7 @@ export default function Layout({ children }) {
             </div>
             <main className="m-5 px-4">
               <div className="p-2">
-              <Breadcrumbs path={path}/>
+                <Breadcrumbs path={path} />
               </div>
 
               <div className="sm:px-4 md:px-">{children}</div>
@@ -204,4 +128,3 @@ export default function Layout({ children }) {
     </>
   );
 }
-

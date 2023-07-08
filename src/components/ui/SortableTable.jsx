@@ -203,7 +203,7 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
                       {row[header.id]}
                     </TableCell>
                   ))}
-                  <TableCell className="p-1 m-1 space-x-2">
+                  <TableCell className="p-1 m-1 lg:space-x-2">
                     <Button
                       variant="contained"
                       //href={`${pageurl}/${row.id}`}
