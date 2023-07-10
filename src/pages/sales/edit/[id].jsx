@@ -1,5 +1,5 @@
 //create sales page
-import React, { use } from "react";
+import React, { use, useRef } from "react";
 import {
   Autocomplete,
   Button,
@@ -27,108 +27,70 @@ import { Input } from "postcss";
 const EditSales = () => {
   const router = useRouter();
   const { openSnackbar } = useStateContext();
-  const [products, setProducts] = useState([]);
+  const openSnackbarRef = useRef(openSnackbar);
   const [productId, setProductId] = useState("");
-  const [sales, setSales] = useState([]);
+  const [sale, setSale] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
-  const loading = open && options.length === 0;
   const [selectedOption, setSelectedOption] = useState(null);
-  const [selectedDate, handleDateChange] = useState(dayjs(new Date()));
+  const [selectedDate, handleDateChange] = useState(null);
+  const [selectedDates, setSelectedDate] = useState(null);
   const saleId = router.query.id;
 
   useEffect(() => {
-    getProducts();
-  }, []);
+    openSnackbarRef.current = openSnackbar;
+  }, [openSnackbar]);
 
   useEffect(() => {
-    let active = true;
+    let isCancelled = false;
+    async function fetchData() {
+      try {
+        const [productRes, salesRes] = await Promise.all([
+          axios.get(process.env.APIURL + "/products/idandname", {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }),
+          axios.get(process.env.APIURL + "/sales/"+saleId, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }),
+        ]);
 
-    if (!loading) {
-      return undefined;
-    }
+        setOptions(productRes.data);
+        const sale = salesRes.data;
+        sale.price = sale.price.toFixed(2);
+        sale.saleDate = dayjs(sale.saleDate);
+        console.log(sale)
+        setSale(sale);
+        setSelectedDate(sale.saleDate);
 
-    (async () => {
-      //getProducts();
-
-      if (active) {
-        setOptions(products);
+        const product = productRes.data.find(
+          (product) => product.id === salesRes.data.productId
+        );
+        setSelectedOption(product);
+      } catch (error) {
+        console.log(error);
+        openSnackbarRef.current('error', 'error');
       }
-    })();
+      setLoading(false);
+    }
 
+    if (!isCancelled) {
+      setLoading(true);
+      fetchData();
+      setLoading(false);
+    }
     return () => {
-      active = false;
+      isCancelled = true;
     };
-  }, [products, loading]);
-
-  //   useEffect(() => {
-  //     if (!open) {
-  //       setOptions([]);
-  //     }
-  //   }, [open]);
-
-  useEffect(() => {
-    if (saleId) {
-      getSales();
-    }
-    //setLoading(false);
   }, [saleId]);
-
-  // useEffect(() => {
-  //   setFieldValue("productId", productId);
-  // }, [productId]);
-
-  async function getProducts() {
-    await axios
-      .get(process.env.APIURL + "/products", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      })
-      .then((res) => {
-        //console.log(res.data);
-        setOptions(res.data);
-      });
-  }
-
-  const getSales = async () => {
-    try {
-      await axios
-        .get(process.env.APIURL + "/sales/" + saleId, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          console.log(res.data);
-          formik.setValues({
-            id: res.data.id,
-            productId: res.data.productId,
-            quantity: res.data.quantity,
-            price: res.data.price.toFixed(2),
-            saleDate: dayjs(res.data.saleDate).format("YYYY-MM-DD"),
-            dateTimeCreated: res.data.dateTimeCreated,
-            dateTimeUpdated: res.data.dateTimeUpdated,
-          });
-
-          setProductId(res.data.productId);
-          formik.setFieldValue("productId", res.data.productId);
-          setSelectedOption(
-            options.find((option) => option.id === res.data.productId)
-          );
-        })
-        .catch((err) => {
-          openSnackbar(err.response.data.message, "error");
-          console.log(err);
-        });
-    } catch (error) {
-      console.log(error);
-      openSnackbar("error", "error");
-    }
-  };
+  
 
   const validationSchema = Yup.object({
     price: Yup.string().test(
@@ -139,7 +101,7 @@ const EditSales = () => {
   });
 
   const formik = useFormik({
-    initialValues: {
+    initialValues: sale || {
       id: "",
       product: "",
       productId: "",
@@ -147,6 +109,7 @@ const EditSales = () => {
       price: "",
       saleDate: dayjs(Date().now).format("YYYY-MM-DDTHH:mm:ss"),
     },
+    enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       setIsSubmitting(true);
@@ -247,6 +210,7 @@ const EditSales = () => {
               color="light"
               InputLabelProps={{
                 className: "text-darkaccent-100",
+                shrink: true,
               }}
               InputProps={{
                 className: "text-darkaccent-100",
@@ -269,6 +233,7 @@ const EditSales = () => {
               color="light"
               InputLabelProps={{
                 className: "text-darkaccent-100",
+                shrink: true,
               }}
               InputProps={{
                 className: "text-darkaccent-100",
@@ -280,7 +245,6 @@ const EditSales = () => {
               helperText={formik.touched.price && formik.errors.price}
             />
             <DatePicker
-              // defaultValue={dayjs(Date.now())}
               defaultValue={dayjs(Date.now()).format("YYYY-MM-DDTHH:mm:ss")}
               className=" rounded-lg"
               label="Sale Date"
@@ -293,13 +257,9 @@ const EditSales = () => {
                     " text-darkaccent-100 bg-darkaccent-800 rounded-lg",
                 },
               }}
-              value={selectedDate}
-              //value={dayjs(selectedDate)}
-              //value={dayjs(selectedDate)}
+              value={selectedDates}
               onChange={(date) => {
                 handleDateChange(dayjs(date));
-                //formik.handleChange
-                // formik.setFieldValue("saleDate", dayjs(date).format('YYYY-MM-DD HH:mm:ss'));
                 formik.setFieldValue(
                   "saleDate",
                   dayjs(date).format("YYYY-MM-DDTHH:mm:ss")

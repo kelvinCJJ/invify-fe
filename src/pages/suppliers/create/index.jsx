@@ -11,7 +11,12 @@ import { useStateContext } from "@/contexts/ContextProvider";
 
 const CreateSupplier = () => {
   const { openSnackbar } = useStateContext();
+  const openSnackbarRef = useRef(openSnackbar);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    openSnackbarRef.current = openSnackbar;
+  }, [openSnackbar]);
 
   const formik = useFormik({
     initialValues: {
@@ -35,12 +40,11 @@ const CreateSupplier = () => {
             openSnackbar("Supplier created successfully", "success");
             formik.resetForm();
           } else {
-            openSnackbar(res.data.message, "error");
+            openSnackbarRef.current(rs.data.message, 'error');
           }
         })
         .catch((err) => {
-          console.log(err);
-          openSnackbar(err.response.data.message, "error");
+          openSnackbarRef.current(err.message, 'error');
         })
         .finally(() => {
           setIsSubmitting(false);

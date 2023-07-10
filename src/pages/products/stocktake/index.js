@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import Button from "@/components/ui/Button";
-import { Height } from "@mui/icons-material";
+import { Add, Delete, Height, Remove } from "@mui/icons-material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useStateContext } from "@/contexts/ContextProvider";
@@ -23,29 +23,32 @@ const Stocktake = () => {
       setLastScanTime(null);
       return;
     }
-  
+
     if (qrCode === lastScanTime) {
       console.log("same");
       return;
     }
-  
+
     setStartScan(true);
     setLastScanTime(qrCode);
     setStartScan(false);
     // Check if the product SKU of scanned QR code exists in the database
-    const res = await axios.get(process.env.APIURL + "/products/sku/" + qrCode, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    });
-  
+    const res = await axios.get(
+      process.env.APIURL + "/products/sku/" + qrCode,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }
+    );
+
     if (res.status === 200 && res.data.id && res.data.name) {
       // Check if the scanned item already exists in the list
       const existingItem = scannedInventory.find(
         (item) => item.qrCode === qrCode
       );
-  
+
       if (existingItem) {
         console.log(existingItem);
         // Item already exists, you can handle it accordingly (e.g., show a notification)
@@ -56,9 +59,13 @@ const Stocktake = () => {
               : item
           )
         );
+        openSnackbar(
+          "Product [ " + existingItem.name + " ] is scanned successfully",
+          "success"
+        );
         return;
       }
-  
+
       // Add the scanned item to the list with an initial quantity of 1
       const newItem = {
         qrCode: qrCode,
@@ -67,13 +74,14 @@ const Stocktake = () => {
         quantity: 1,
       };
       setScannedInventory((prevInventory) => [...prevInventory, newItem]);
-      openSnackbar("Product [ "+itemName+" ] is scanned successfully", "success");
+      openSnackbar(
+        "Product [ " + newItem.name + " ] is scanned successfully",
+        "success"
+      );
     } else {
       openSnackbar("Product not found", "error");
-    }  
-    
+    }
   };
-  
 
   const handleError = (err) => {
     console.error(err);
@@ -111,16 +119,16 @@ const Stocktake = () => {
     }));
 
     await axios
-    .put(process.env.APIURL + "/products/stocktake", productStockTakeDto, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    })
-    .then((res) => {
-      console.log(res.data);
-    });
-
+      .post(process.env.APIURL + "/stocktakes", productStockTakeDto, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        openSnackbar("Stocktake submitted successfully", "success");
+      });
   };
 
   useEffect(() => {
@@ -130,44 +138,61 @@ const Stocktake = () => {
   return (
     <Layout>
       <h2>Inventory Scanning</h2>
-      <div className="p-1">
-        <QrReader
-          delay={500}
-          onError={handleError}
-          onScan={handleScan}
-          style={{ width: "100%" }}
-        />
-      </div>
-      <div>
-        <h3>Scanned Inventory</h3>
-        {scannedInventory.length === 0 ? (
-          <p>No items scanned yet.</p>
-        ) : (
-          <ul>
-            {scannedInventory.map((item) => (
-              <li key={item.qrCode}>
-                <p>
-                  <strong>Name:</strong> {item.name}
-                </p>
-                <p>
-                  <strong>Quantity:</strong> {item.quantity}
-                </p>
-                <Button onClick={() => handleIncreaseQuantity(item.qrCode)}>
-                  Increase Quantity
-                </Button>
-                <Button onClick={() => handleDecreaseQuantity(item.qrCode)}>
-                  Decrease Quantity
-                </Button>
-                <Button onClick={() => handleDeleteItem(item.qrCode)}>
-                  Delete
-                </Button>
-              </li>
-            ))}
-            <Button onClick={() => handleSubmit()}>
+      <div className="grid grid-cols-1 gap-2 mt-2 lg:grid-cols-2 lg:gap-4 lg:mt-4 align-center ">
+        <div className="bg-gray-200 p-2">
+          <QrReader
+            delay={500}
+            onError={handleError}
+            onScan={handleScan}
+            //style={{ width: "80%" }}
+            className="w-full"
+          />
+        </div>
+        <div className="align-center">
+          <p className="text-2xl">Scanned Inventory List</p>
+          {scannedInventory.length === 0 ? (
+            <p>No items scanned yet.</p>
+          ) : (
+            <div className="mt-4 space-y-4">
+              <div className="grid grid-cols-2 font-semibold text-lg mb-2">
+                <div>Product</div>
+                <div className="col-start-2 text-center">Quantity</div>
+              </div>
+              {scannedInventory.map((item) => (
+                <div
+                  className="grid grid-cols-2 space-y-3 items-center"
+                  key={item.qrCode}
+                >
+                  <div className="text-base text-ellipsis">{item.name}</div>
+                  <div className="flex flex-row items-center justify-center">
+                    <Add
+                      className="fill-darkshade-100 mr-2 cursor-pointer"
+                      onClick={() => handleIncreaseQuantity(item.qrCode)}
+                    />
+                    <div>{item.quantity}</div>
+
+                    <Remove
+                      className="fill-darkshade-100 ml-2 cursor-pointer"
+                      onClick={() => handleDecreaseQuantity(item.qrCode)}
+                    />
+                    <Delete
+                      className="fill-darkshade-100 ml-5 cursor-pointer"
+                      onClick={() => handleDeleteItem(item.qrCode)}
+                    />
+                  </div>
+                </div>
+              ))}
+              <div className="mt-2">
+                <button
+                  className="w-full h-10 bg-success-500 text-darkshade-100 rounded-lg"
+                  onClick={() => handleSubmit()}
+                >
                   Submit
-              </Button>
-          </ul>
-        )}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </Layout>
   );

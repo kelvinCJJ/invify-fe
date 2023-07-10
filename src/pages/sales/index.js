@@ -1,6 +1,6 @@
 
 import Layout from "@/components/Layout";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Snackbar } from "@mui/material";
 import SortableTable from "@/components/ui/SortableTable";
@@ -15,13 +15,17 @@ function Sales() {
   const [headData, setHeadData] = useState([]);
   const [rowData, setRowData] = useState([]);
   const [isLoading, setLoading] = useState(false);
-  const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
-  const { snackbarOpen, openSnackbar, openModal } = useStateContext();
+  const {  openSnackbar } = useStateContext();
+  const openSnackbarRef = useRef(openSnackbar);
+
+  useEffect(() => {
+    openSnackbarRef.current = openSnackbar;
+  }, [openSnackbar]);
 
   const headers = [
     // { id: "id", label: "Id", disablePadding: false, numeric: false },
-    { id: "product", label: "Product", disablePadding: false, numeric: false },
+    { id: "productName", label: "Product", disablePadding: false, numeric: false },
     { id: "quantity", label: "Quantity", disablePadding: false, numeric: false, },
     { id: "price", label: "Price($)", disablePadding: false, numeric: false },
     { id: "saleDate", label: "Sale Date", disablePadding: false, numeric: false },
@@ -32,62 +36,44 @@ function Sales() {
   };
 
   useEffect(() => {
-    getProducts();
-    setHeadData(headers);
-  }, []);
-  
-  useEffect(() => {
-    if (products.length > 0) {
-      getSales();
-    }
-  }, [products]);
-  
-  async function getProducts() {
-    await axios
-      .get(process.env.APIURL + "/products", {
+    async function getProducts() {
+      const res = await axios.get(process.env.APIURL + "/products", {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
-      })
-      .then((res) => {
-        //console.log(res.data);
-        setProducts(res.data);
-        //getSales();
       });
-  }
-
-  async function getSales() {
-    try {
-      await axios
-        .get(process.env.APIURL + "/sales", {
+      setProducts(res.data);
+    }
+  
+    async function getSales() {
+      try {
+        const res = await axios.get(process.env.APIURL + "/sales", {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
-        })
-        .then((res) => {
-           console.log(res.data);
-           console.log(products);
-           //console.log(categories);
-           res.data.map((sales) => {
-            if(products.length > 0){
-            sales.product = products.find(
-              (product) => product.id === sales.productId
-            ).name;
-            }
-            sales.saleDate = new dayjs(sales.saleDate).format("DD/MM/YYYY");
-
-          });
-          setRowData(res.data);
-          //console.log(rowData);
-          setLoading(false);
         });
-    } catch (err) {
-      //console.log(err);
-      openSnackbar("err", "error");
+        res.data.map((sales) => {
+          sales.saleDate = new dayjs(sales.saleDate).format("DD/MM/YYYY");
+        });
+        setRowData(res.data);
+        setLoading(false);
+      } catch (err) {
+        openSnackbarRef.current(err.message, 'error');
+      }
     }
-  }
+  
+    async function fetchData() {
+      //await getProducts();
+      getSales();
+    }
+  
+    fetchData();
+  }, []);
+  
+  
+  
 
   return (
     <Layout>
@@ -100,7 +86,7 @@ function Sales() {
         </Button>
       </div>
       <SortableTable
-        headers={headData}
+        headers={headers}
         rows={rowData}
         pageurl={"/sales"}
         onDelete={handleDelete}

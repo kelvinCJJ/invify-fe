@@ -1,15 +1,12 @@
 
 import Layout from "@/components/Layout";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Snackbar } from "@mui/material";
 import SortableTable from "@/components/ui/SortableTable";
 import { useRouter } from "next/router";
-import UniversalModal from "@/components/ui/UniversalModal";
 import Button from "@/components/ui/Button";
 import { useStateContext } from "@/contexts/ContextProvider";
 import { Add } from "@mui/icons-material";
-import dayjs from "dayjs";
 
 function Suppliers() {
   const router = useRouter();
@@ -17,7 +14,8 @@ function Suppliers() {
   const [rowData, setRowData] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [suppliers, setSuppliers] = useState([]);
-  const { snackbarOpen, openSnackbar, openModal } = useStateContext();
+  const { openSnackbar } = useStateContext();
+  const openSnackbarRef = useRef(openSnackbar);
 
   const headers = [
     // { id: "id", label: "Id", disablePadding: false, numeric: false },
@@ -42,19 +40,20 @@ function Suppliers() {
             },
           })
           .then((res) => {
-             console.log(res.data);
             setRowData(res.data);
             setLoading(false);
           });
       } catch (err) {
-        openSnackbar("err", "error");
+        openSnackbarRef.current(err.response.data.message, 'error');
       }
     }
 
     getSuppliers();
-  }, [openSnackbar]);
+  }, []);
 
-  
+  useEffect(() => {
+    openSnackbarRef.current = openSnackbar;
+  }, [openSnackbar]);
 
   return (
     <Layout>

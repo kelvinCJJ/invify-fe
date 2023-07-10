@@ -1,12 +1,12 @@
 //add category page
-import { Button, Grid, TextField } from "@mui/material";
-import { useFormik } from "formik";
-import axios from "axios";
-import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
-import { useStateContext } from "@/contexts/ContextProvider";
-import { useEffect, useState } from "react";
 import BGrid from "@/components/ui/BGrid";
+import { useStateContext } from "@/contexts/ContextProvider";
+import { Button, Grid, TextField } from "@mui/material";
+import axios from "axios";
+import { useFormik } from "formik";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
 
 const EditSupplier = () => {
   const router = useRouter();
@@ -49,7 +49,6 @@ const EditSupplier = () => {
 
    useEffect(() => {
     let isCancelled = false;
-    //setLoading(true);
 
     async function getSupplier() {
       try {       
@@ -67,8 +66,7 @@ const EditSupplier = () => {
             setSupplier(res.data);
           })
       } catch (error) {
-        console.log(error);
-        openSnackbarRef.current(err.response.data.message, 'error');
+        openSnackbarRef.current(error.message, 'error');
       }
     };
     

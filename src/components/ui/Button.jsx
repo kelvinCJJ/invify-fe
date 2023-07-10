@@ -2,7 +2,7 @@ import React from 'react';
 import { Button as MuiButton } from '@mui/material';
 
 const Button = ({ severity, children, ...props }) => {
-    let className = 'px-4 py-2 text-xs  md:text-base md:px-6 md:py-3 rounded-md normal-case'
+    let className = 'text-md  md:text-base  rounded-md normal-case'
   
     switch (severity) {
       case 'error':
@@ -16,6 +16,9 @@ const Button = ({ severity, children, ...props }) => {
         break;
       case 'success':
         className += ' text-white bg-success-500 hover:bg-success-800';
+        break;
+      case 'icon':
+        className += 'text-white bg-transparent  hover:bg-darkshade-400';
         break;
       default:
         className += ' text-primary-900 bg-lightshade-500 hover:bg-lightshade-600';

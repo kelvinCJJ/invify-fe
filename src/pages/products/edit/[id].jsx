@@ -1,5 +1,7 @@
 //add product page
-import React, { useRef, useEffect } from "react";
+import Layout from "@/components/Layout";
+import BGrid from "@/components/ui/BGrid";
+import { useStateContext } from "@/contexts/ContextProvider";
 import {
   Autocomplete,
   Button,
@@ -11,13 +13,10 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { useFormik } from "formik";
 import axios from "axios";
-import Layout from "@/components/Layout";
+import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import BGrid from "@/components/ui/BGrid";
-import { useStateContext } from "@/contexts/ContextProvider";
+import { Fragment, useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 
 const EditProduct = () => {
@@ -25,12 +24,10 @@ const EditProduct = () => {
 
   const { openSnackbar } = useStateContext();
   const openSnackbarRef = useRef(openSnackbar);
-
-  const [categoryId, setCategoryId] = useState("");
   const [data, setData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [open, setOpen] = React.useState(false);
-  const [options, setOptions] = React.useState([]);
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
   const productId = router.query.id;
@@ -61,7 +58,10 @@ const EditProduct = () => {
         ]);
 
         setOptions(categoriesRes.data);
-        setData(productRes.data);
+        const product = productRes.data;
+        product.price = product.price.toFixed(2);
+        product.cost = product.cost.toFixed(2);
+        setData(product);
 
         const category = categoriesRes.data.find(
           (category) => category.id === productRes.data.categoryId
@@ -83,12 +83,6 @@ const EditProduct = () => {
       isCancelled = true;
     };
   }, [productId]);
-
-  // useEffect(() => {
-  //   if (selectedOption) {
-  //     formik.setFieldValue("categoryId", selectedOption.id);
-  //   }
-  // }, [selectedOption]);
 
   const validationSchema = Yup.object({
     price: Yup.string().test(
@@ -141,9 +135,6 @@ const EditProduct = () => {
         })
         .catch((err) => {
           console.log(err);
-          // setSnackbarMessage(err.response.data.message);
-          // setSnackbarSeverity("error");
-          // setSnackbarOpen(true);
           openSnackbar(err.response.data.message, "error");
         })
         .finally(() => {
@@ -153,7 +144,7 @@ const EditProduct = () => {
   });
 
   if (loading) {
-    return "loading...";
+    return <Layout>loading...</Layout>;
   }
 
   return (
@@ -305,12 +296,12 @@ const EditProduct = () => {
                     InputProps={{
                       ...params.InputProps,
                       endAdornment: (
-                        <React.Fragment>
+                        <Fragment>
                           {loading ? (
                             <CircularProgress color="inherit" size={20} />
                           ) : null}
                           {params.InputProps.endAdornment}
-                        </React.Fragment>
+                        </Fragment>
                       ),
                     }}
                   />

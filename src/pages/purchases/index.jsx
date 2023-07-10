@@ -1,15 +1,13 @@
 
 import Layout from "@/components/Layout";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Snackbar } from "@mui/material";
 import SortableTable from "@/components/ui/SortableTable";
 import { useRouter } from "next/router";
-import UniversalModal from "@/components/ui/UniversalModal";
 import Button from "@/components/ui/Button";
 import { useStateContext } from "@/contexts/ContextProvider";
 import { Add } from "@mui/icons-material";
-import dayjs from "dayjs";
+import { fetchData } from "next-auth/client/_utils";
 
 function Purchases() {
   const router = useRouter();
@@ -17,14 +15,18 @@ function Purchases() {
   const [rowData, setRowData] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [purchases, setPurchases] = useState([]);
-  const { snackbarOpen, openSnackbar, openModal } = useStateContext();
+  const { openSnackbar } = useStateContext();
+  const openSnackbarRef = useRef(openSnackbar);
+
+  useEffect(() => {
+    openSnackbarRef.current = openSnackbar;
+  }, [openSnackbar]);
 
   const headers = [
     // { id: "id", label: "Id", disablePadding: false, numeric: false },
-    { id: "name", label: "Company Name", disablePadding: false, numeric: false },
-    { id: "contactname", label: "Contact Person", disablePadding: false, numeric: false, },
-    { id: "phone", label: "Phone", disablePadding: false, numeric: false },
-    { id: "email", label: "Email", disablePadding: false, numeric: false },
+    { id: "productName", label: "Product", disablePadding: false, numeric: false },
+    { id: "quantity", label: "Quantity", disablePadding: false, numeric: false, },
+    { id: "price", label: "Price", disablePadding: false, numeric: false },
   ];
   
   const handleDelete = (rowId) => {
@@ -32,47 +34,57 @@ function Purchases() {
   };
 
   useEffect(() => {
-    getSuppliers();
-    setHeadData(headers);
+    let isCancelled = false;
+    
+    async function fetchData() {
+      try {
+        await axios
+          .get(process.env.APIURL + "/purchases", {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          })
+          .then((res) => {
+             console.log(res.data);
+            setRowData(res.data);
+          });
+          
+      } catch (err) {
+        openSnackbarRef.current(err.message, 'error');
+      }
+    }
+
+    if (!isCancelled) {
+      setLoading(true);
+      fetchData();
+      setLoading(false);
+    }
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
-  async function getSuppliers() {
-    try {
-      await axios
-        .get(process.env.APIURL + "/suppliers", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-           console.log(res.data);
-          setRowData(res.data);
-          setLoading(false);
-        });
-    } catch (err) {
-      openSnackbar("err", "error");
-    }
-  }
+  
 
   return (
     <Layout>
       <div className="my-2">
       </div>
       <div className="flex flex-row ">
-        <Button variant="contained" href="/suppliers/create">
+        <Button variant="contained" href="/purchases/create">
           <Add />
-          New Supplier
+          New Purchase
         </Button>
       </div>
       <SortableTable
-        headers={headData}
+        headers={headers}
         rows={rowData}
-        pageurl={"/suppliers"}
+        pageurl={"/purchases"}
         onDelete={handleDelete}
       />
     </Layout>
   );
 }
 
-export default Suppliers;
+export default Purchases;

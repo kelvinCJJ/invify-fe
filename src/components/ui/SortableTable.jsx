@@ -33,15 +33,6 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
   const { openSnackbar, openModal, closeModal } = useStateContext();
 
   const router = useRouter();
-  //const [modalOpen, setModalOpen] = useState(false);
-
-  // const handleOpenModal = () => {
-  //   setModalOpen(true);
-  // };
-
-  // const handleCloseModal = () => {
-  //   setModalOpen(false);
-  // };
 
   //Sorting
   const handleSort = (header) => {
@@ -59,7 +50,6 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
     setPage(0);
   };
 
-  //console.log(rows);
   //Pagination
   const filteredRows = rows.filter((row) =>
     Object.values(row).some((value) => {
@@ -126,10 +116,6 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
       });
     onDelete(rowId);
   };
-
-  // useEffect (() => {
-  //   console.log("useEffect");
-  // }, [setRows]);
 
   return (
     <div>
