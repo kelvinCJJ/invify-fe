@@ -3,8 +3,8 @@ const nextConfig = {
   output: "standalone",
   reactStrictMode: true,
   env: {
-    APIURL: "https://localhost:7028/api",
-    AUTHURL: "https://localhost:7028/auth"
+    APIURL: "https://invify.azurewebsites.net/",
+    AUTHURL: "https://invify.azurewebsites.net/"
   },
 }
 
