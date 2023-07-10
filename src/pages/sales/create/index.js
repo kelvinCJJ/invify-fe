@@ -240,9 +240,8 @@ const CreateSales = () => {
                 value = {selectedDate}
                 //value={dayjs(selectedDate)}
                 //value={dayjs(selectedDate)}
-                onChange={(date) => {handleDateChange(dayjs(date))  
-                  //formik.handleChange                
-                  // formik.setFieldValue("saleDate", dayjs(date).format('YYYY-MM-DD HH:mm:ss'));
+                onChange={(date) => {
+                  handleDateChange(dayjs(date))                   
                   formik.setFieldValue("saleDate", dayjs(date).format('YYYY-MM-DDTHH:mm:ss'));
                 
                 }}

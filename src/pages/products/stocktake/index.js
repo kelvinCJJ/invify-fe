@@ -113,13 +113,13 @@ const Stocktake = () => {
 
   const handleSubmit = async () => {
     // Submit the scanned inventory to the backend
-    const productStockTakeDto = scannedInventory.map((item) => ({
+    const stock = scannedInventory.map((item) => ({
       ProductId: item.id,
-      StocktakeQuantity: item.quantity,
+      StockTakeQuantity: item.quantity,
     }));
-
+    console.log(stock);
     await axios
-      .post(process.env.APIURL + "/stocktakes", productStockTakeDto, {
+      .put(process.env.APIURL + "/products/stocktake", stock, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -128,6 +128,7 @@ const Stocktake = () => {
       .then((res) => {
         console.log(res.data);
         openSnackbar("Stocktake submitted successfully", "success");
+        setScannedInventory([]);
       });
   };
 
@@ -138,17 +139,17 @@ const Stocktake = () => {
   return (
     <Layout>
       <h2>Inventory Scanning</h2>
-      <div className="grid grid-cols-1 gap-2 mt-2 lg:grid-cols-2 lg:gap-4 lg:mt-4 align-center ">
-        <div className="bg-gray-200 p-2">
+      <div className="grid grid-cols-1 gap-2 mt-2 xl:grid-cols-3 xl:gap-4 lg:mt-4 align-center ">
+        <div className="bg-gray-200 p-2 m-2 resize">
           <QrReader
             delay={500}
             onError={handleError}
             onScan={handleScan}
             //style={{ width: "80%" }}
-            className="w-full"
+            className=" w-full max-w-2xl"
           />
         </div>
-        <div className="align-center">
+        <div className="align-center bg-darkaccent-800 p-4 rounded-2xl xl:col-start-2">
           <p className="text-2xl">Scanned Inventory List</p>
           {scannedInventory.length === 0 ? (
             <p>No items scanned yet.</p>
