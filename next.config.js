@@ -3,8 +3,8 @@ const nextConfig = {
   output: "standalone",
   reactStrictMode: true,
   env: {
-    APIURL: "https://localhost:7028/api",
-    AUTHURL: "https://localhost:7028/auth"
+    APIURL: "https://invify.azurewebsites.net/api",
+    AUTHURL: "https://invify.azurewebsites.net/auth"
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
