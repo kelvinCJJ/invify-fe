@@ -1,5 +1,5 @@
 //add product page
-import React from "react";
+import React, { useRef } from "react";
 import {
   Autocomplete,
   Button,
@@ -10,6 +10,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  debounce,
 } from "@mui/material";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -24,66 +25,61 @@ import * as Yup from "yup";
 const CreateProduct = () => {
   const router = useRouter();
   const { openSnackbar } = useStateContext();
+  const openSnackbarRef = useRef(openSnackbar);
   const [categories, setCategories] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
-  //const [loading, setLoading] = useState(true);
-  const loading = open && options.length === 0;
+  const [loading, setLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [productName, setProductName] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
-    let active = true;
+    openSnackbarRef.current = openSnackbar;
+  }, [openSnackbar]);
 
-    // if (!loading) {
-    //   return undefined;
-    // }
+  useEffect(() => {
+    let isCancelled = false;
 
-    (async () => {
-      //getCategories();
-
-      if (active) {
-        setOptions(categories);
-      }
-    })();
+    async function getCategories() {
+      await axios
+        .get(process.env.APIURL + "/categories", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          //console.log(res.data);
+          setCategories(res.data);
+          //formik.setFieldValue("categoryId", res.data[0].id);
+        });
+    }
+    if (!isCancelled) {
+      setLoading(true);
+      getCategories();
+      setLoading(false);
+    }
 
     return () => {
-      active = false;
+      isCancelled = true;
     };
-  }, [categories, loading]);
-
-  useEffect(() => {
-    getCategories();
   }, []);
 
-  async function getCategories() {
-    await axios
-      .get(process.env.APIURL + "/categories", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      })
-      .then((res) => {
-        //console.log(res.data);
-        setCategories(res.data);
-        //formik.setFieldValue("categoryId", res.data[0].id);
-      });
-  }
+  // Define a debounced version of the fetchDescription function
 
   const validationSchema = Yup.object({
-    price: Yup.string()
-      .test(
-        'is-decimal',
-        'Price must be a decimal number with two decimal places',
-        (value) => (value + "").match(/^\d*(\.\d{2})$/)
-      ),
-    cost: Yup.string()
-        .test(
-            'is-decimal',
-            'Cost must be a decimal number with two decimal places',
-            (value) => (value + "").match(/^\d*(\.\d{2})$/)
-        )
+    price: Yup.string().test(
+      "is-decimal",
+      "Price must be a decimal number with two decimal places",
+      (value) => (value + "").match(/^\d*(\.\d{2})$/)
+    ),
+    cost: Yup.string().test(
+      "is-decimal",
+      "Cost must be a decimal number with two decimal places",
+      (value) => (value + "").match(/^\d*(\.\d{2})$/)
+    ),
   });
 
   const formik = useFormik({
@@ -128,6 +124,51 @@ const CreateProduct = () => {
     },
   });
 
+  // Call the debouncedFetchDescription function whenever the productName changes
+  useEffect(() => {
+    async function fetchDescription(value) {
+      // Call the OpenAI API to generate a product description
+      // await axios
+      //   .post(
+      //     "https://api-inference.huggingface.co/models/HamidRezaAttar/gpt2-product-description-generator",
+      //     {
+      //       inputs: value,
+      //     },
+      //     {
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //         Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
+      //       },
+      //     }
+      //   )
+      //   .then((res) => {
+      //     console.log(res.data);
+      //     formik.setFieldValue("description", res.data[0].generated_text);
+      //     //setDescription(res.data.choices[0].text);
+      //   });
+      await axios
+        .post(
+          "/api/products/create",
+          {
+            inputs: value,
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          formik.setFieldValue("description", res.data.generated_text);
+          //setDescription(res.data.choices[0].text);
+        });
+    }
+    if (formik.values.name != "") {
+      const input = "Write a less than 100 word product description for " + formik.values.name+". Dont write anything else";
+      const timeoutId = setTimeout(() => {
+        fetchDescription(input);
+      }, 2000);
+      return () => clearTimeout(timeoutId);
+    }
+    
+  }, [formik.values.name]);
+
   return (
     <Layout>
       <form onSubmit={formik.handleSubmit}>
@@ -139,9 +180,15 @@ const CreateProduct = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
-              required fullWidth id="name" name="name" label="Product Name"
-              placeholder="e.g. Apple iPhone 12 Pro Max" variant="filled" margin="normal" color="light"
-              
+              required
+              fullWidth
+              id="name"
+              name="name"
+              label="Product Name"
+              placeholder="e.g. Apple iPhone 12 Pro Max"
+              variant="filled"
+              margin="normal"
+              color="light"
               className=" bg-darkaccent-800 rounded-lg"
               value={formik.values.name}
               onChange={formik.handleChange}
@@ -149,8 +196,15 @@ const CreateProduct = () => {
               helperText={formik.touched.name && formik.errors.name}
             />
             <TextField
-              required fullWidth id="sku" name="sku" label="SKU"
-              placeholder="e.g. IPHONE12PROMAX" variant="filled" margin="normal" color="light"
+              required
+              fullWidth
+              id="sku"
+              name="sku"
+              label="SKU"
+              placeholder="e.g. IPHONE12PROMAX"
+              variant="filled"
+              margin="normal"
+              color="light"
               InputLabelProps={{
                 className: "text-darkaccent-100",
               }}
@@ -164,8 +218,15 @@ const CreateProduct = () => {
               helperText={formik.touched.sku && formik.errors.sku}
             />
             <TextField
-              required fullWidth id="description" name="description" label="Description"
-              placeholder="e.g. Apple iPhone 12 Pro Max" variant="filled" margin="normal" color="light"
+              required
+              fullWidth
+              id="description"
+              name="description"
+              label="Description"
+              placeholder="e.g. Apple iPhone 12 Pro Max"
+              variant="filled"
+              margin="normal"
+              color="light"
               InputLabelProps={{
                 className: "text-darkaccent-100",
               }}
@@ -184,8 +245,15 @@ const CreateProduct = () => {
               }
             />
             <TextField
-              required fullWidth id="price" name="price" label="Price"
-              placeholder="e.g. 1000.00" variant="filled" margin="normal" color="light"
+              required
+              fullWidth
+              id="price"
+              name="price"
+              label="Price"
+              placeholder="e.g. 1000.00"
+              variant="filled"
+              margin="normal"
+              color="light"
               InputLabelProps={{
                 className: "text-darkaccent-100",
               }}
@@ -199,8 +267,15 @@ const CreateProduct = () => {
               helperText={formik.touched.price && formik.errors.price}
             />
             <TextField
-              required fullWidth id="cost" name="cost" label="Cost"
-              placeholder="e.g. 800.00" variant="filled" margin="normal" color="light"
+              required
+              fullWidth
+              id="cost"
+              name="cost"
+              label="Cost"
+              placeholder="e.g. 800.00"
+              variant="filled"
+              margin="normal"
+              color="light"
               InputLabelProps={{
                 className: "text-darkaccent-100",
               }}
@@ -211,24 +286,9 @@ const CreateProduct = () => {
               value={formik.values.cost}
               onChange={formik.handleChange}
               error={formik.touched.cost && Boolean(formik.errors.cost)}
-                helperText={formik.touched.cost && formik.errors.cost}
+              helperText={formik.touched.cost && formik.errors.cost}
             />
             <div>
-              {/* <FormGroup color="light">
-                <InputLabel id="category">Category</InputLabel>
-                <Select
-                  id="category"
-                  value={formik.values.categoryId}
-                  onChange={formik.handleChange("categoryId")}
-                >
-                  {categories.map((category) => (
-                    <MenuItem key={category.id} value={category.id}>
-                      {category.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {formik.errors.category && <p>{formik.errors.category}</p>}
-              </FormGroup> */}
               <Autocomplete
                 id="categoryId"
                 name="categoryId"

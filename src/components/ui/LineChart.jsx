@@ -1,61 +1,40 @@
+import React from 'react';
+import { Line } from 'react-chartjs-2';
 
-import { Card } from '@mui/material';
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-  } from 'chart.js';
-  import { Line } from 'react-chartjs-2';
-  
-//generate line chart with chart.js
-const LineChart = () => {
+const LineChart = ({ currentData, forecasts }) => {
   const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     datasets: [
       {
-        label: 'My First dataset',
-        data: [65, 59, 80, 81, 56, 55, 40],
+        label: 'Current',
+        data: currentData,
         fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
-      }
-    ]
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgba(255, 99, 132, 0.2)',
+      },
+      {
+        label: 'Forecast',
+        data: forecasts.map(forecast => forecast.TotalQuantity || 0),
+        fill: false,
+        backgroundColor: 'rgb(54, 162, 235)',
+        borderColor: 'rgba(54, 162, 235, 0.2)',
+      },
+    ],
   };
 
   const options = {
-    Responsive: true,
     scales: {
-        x: {
-          grid: {
-            display: false
-          },
+      yAxes: [
+        {
           ticks: {
-            display: false
-          }
+            beginAtZero: true,
+          },
         },
-        y: {
-          grid: {
-            display: false
-          },
-          ticks: {
-            display: false
-          }
-        }
-      }
+      ],
+    },
   };
 
-  return (
-    <Card>
-      <div id="chart">
-        <Line data={data} options={options} />
-      </div>
-    </Card>
-  );
-}
+  return <Line data={data} options={options} />;
+};
 
 export default LineChart;

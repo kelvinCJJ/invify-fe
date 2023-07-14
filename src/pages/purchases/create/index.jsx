@@ -24,7 +24,7 @@ const CreatePurchase = () => {
   const [selectedProductOption, setSelectedProductOption] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedDate, handleDateChange] = useState(dayjs(new Date()));
-  const purchaseId = router.query.id;
+  //const purchaseId = router.query.id;
 
   useEffect(() => {
     openSnackbarRef.current = openSnackbar;
@@ -66,7 +66,7 @@ const CreatePurchase = () => {
     return () => {
       isCancelled = true;
     };
-  }, [purchaseId]);
+  }, []);
 
   const validationSchema = Yup.object({
     price: Yup.string().test(
@@ -125,7 +125,7 @@ const CreatePurchase = () => {
         <BGrid>
           <Grid item xs={12}>
             <h1 className="text-xl font-semibold overflow-ellipsis">
-              Edit Purchases
+              Create Purchases
             </h1>
           </Grid>
           <Grid item xs={12} md={6}>
