@@ -31,7 +31,6 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchAll = async () => {
       setLoading(true);
-      console;
       //axios all
       const headers = {
         "Content-Type": "application/json",
@@ -238,6 +237,8 @@ const Dashboard = () => {
                 <LineChart
                   currentData={yearlySalesForecast.actualData}
                   forecasts={yearlySalesForecast.forecastedData}
+                  id="yearlySalesForecast"
+                  key={1}
                 />
               </div>
             </div>
