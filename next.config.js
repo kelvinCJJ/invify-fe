@@ -4,7 +4,7 @@ const nextConfig = {
   reactStrictMode: true,
   env: {
     APIURL: "https://invify.azurewebsites.net/api",
-    AUTHURL: "https://invify.azurewebsites.net/auth"  
+    AUTHURL: "https://invify.azurewebsites.net/auth",  
     BING_COOKIE:"1DmUDupUND3Z0BIcsaWK4NUgbmdjwY4c6ipUUWN1Cxf_tRO4wiHdmjpoaw-FhSgJQsitlpm-CHdQZPbFdxL2nMgWlmqYnTYrA_YqBBtZXFrZkOJ-p-gDMNkJ9ky08i0fsUnkTsvMpB0mRflM1MWXeZBuyny2Hx1JF34VnosLpy_puh6dCIUpcue3bE971a4JeGQppbX5gTGMNJI6qXZXgG02TbTZoPpMgcRUmGazRnLQ"
   },
   eslint: {
