@@ -18,7 +18,7 @@ const Breadcrumbs = ({path}) => {
 
     if (isLast) {
       breadcrumbs.push(
-        <Typography key={i} className="text-lightaccent-200 font-bold">
+        <Typography key={i} className=" font-bold">
           {label}
         </Typography>
       );
@@ -26,7 +26,7 @@ const Breadcrumbs = ({path}) => {
       breadcrumbs.push(
         <Link
           key={i}
-          className="text-white hover:text-lightaccent-400"
+          className="text-white hover:text-lightaccent-500"
           underline="hover"
           href={`${linkPath}`}
         >

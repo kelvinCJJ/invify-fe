@@ -115,17 +115,8 @@ const Sidebar = ({ children, auth }) => {
               >
                 <ReceiptOutlinedIcon  />
                 <p >Purchases</p>
-              </ActiveLink>
+              </ActiveLink>              
               
-              <ActiveLink
-                href="/analytics"
-                onClick={handleCloseSideBar}
-                activeClassName={activeLink}
-                className= {normalLink}                
-              >
-                <AnalyticsOutlined  />
-                <p >Analytics</p>
-              </ActiveLink>
             </div>
             
           </div>

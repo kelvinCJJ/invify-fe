@@ -6,6 +6,7 @@ import {
   CircularProgress,
   FormGroup,
   Grid,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -32,8 +33,8 @@ const CreateProduct = () => {
   const [options, setOptions] = React.useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [productName, setProductName] = useState("");
-  const [description, setDescription] = useState("");
+  const [isDescriptionLoading, setIsDescriptionLoading] = useState(false);
+
 
   useEffect(() => {
     openSnackbarRef.current = openSnackbar;
@@ -126,26 +127,10 @@ const CreateProduct = () => {
 
   // Call the debouncedFetchDescription function whenever the productName changes
   useEffect(() => {
+
     async function fetchDescription(value) {
-      // Call the OpenAI API to generate a product description
-      // await axios
-      //   .post(
-      //     "https://api-inference.huggingface.co/models/HamidRezaAttar/gpt2-product-description-generator",
-      //     {
-      //       inputs: value,
-      //     },
-      //     {
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //         Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
-      //       },
-      //     }
-      //   )
-      //   .then((res) => {
-      //     console.log(res.data);
-      //     formik.setFieldValue("description", res.data[0].generated_text);
-      //     //setDescription(res.data.choices[0].text);
-      //   });
+      //Bing chat api to predict description
+      setIsDescriptionLoading(true);
       await axios
         .post(
           "/api/products/create",
@@ -157,8 +142,12 @@ const CreateProduct = () => {
           console.log(res);
           formik.setFieldValue("description", res.data.generated_text);
           //setDescription(res.data.choices[0].text);
+        })
+        .finally(() => {
+          setIsDescriptionLoading(false);
         });
     }
+    
     if (formik.values.name != "") {
       const input = "Write a less than 100 word product description for " + formik.values.name+". Dont write anything else";
       const timeoutId = setTimeout(() => {
@@ -216,7 +205,7 @@ const CreateProduct = () => {
               onChange={formik.handleChange}
               error={formik.touched.sku && Boolean(formik.errors.sku)}
               helperText={formik.touched.sku && formik.errors.sku}
-            />
+            />            
             <TextField
               required
               fullWidth
@@ -233,6 +222,13 @@ const CreateProduct = () => {
               InputProps={{
                 className: "text-darkaccent-100",
                 multiline: true,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {isDescriptionLoading ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : null}
+                  </InputAdornment>
+                ),
               }}
               className=" bg-darkaccent-800 rounded-lg"
               value={formik.values.description}

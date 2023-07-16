@@ -24,7 +24,7 @@ import { useStateContext } from "@/contexts/ContextProvider";
 import UniversalModal from "./UniversalModal";
 import { useEffect } from "react";
 
-const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
+const SortableTable = ({ headers, rows, pageurl, onDelete, buttons=true }) => {
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
   const [searchQuery, setSearchQuery] = useState("");
@@ -169,7 +169,9 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
                   </TableSortLabel>
                 </TableCell>
               ))}
+              {buttons && (
               <TableCell>Actions</TableCell>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -189,6 +191,7 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
                       {row[header.id]}
                     </TableCell>
                   ))}
+                  {buttons && (
                   <TableCell className="p-1 m-1 lg:space-x-2">
                     <Button
                       variant="contained"
@@ -219,6 +222,7 @@ const SortableTable = ({ headers, rows, pageurl, onDelete }) => {
                       />
                     </Button>
                   </TableCell>
+                  )}
                 </TableRow>
               ))}
           </TableBody>
