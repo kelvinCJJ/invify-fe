@@ -118,7 +118,7 @@ const Analytics = () => {
         {/* <Typography variant="h4" component="h1">
           Sales Trends
         </Typography> */}
-         <LineChart currentData={salesTrends.totalSales} forecasts={salesTrends.totalRevenue} id={"salesTrends"} keys={"salesTrends"}/>
+         <LineChart currentData={salesTrends.totalSales} forecasts={salesTrends.totalRevenue}/>
         </div>
     </Layout>
   );

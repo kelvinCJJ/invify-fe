@@ -1,9 +1,14 @@
 import { Card } from "@mui/material";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import Chart from 'chart.js/auto';
 import React from "react";
 import { Line } from "react-chartjs-2";
+import { LinearScale } from "chart.js/auto";
 
-const LineChart = ({ currentData, forecasts, keys }) => {
+Chart.register(
+  LinearScale,
+)
+
+const LineChart = ({ currentData, forecasts }) => {
   const data = {
     
       labels: [
@@ -74,7 +79,7 @@ const LineChart = ({ currentData, forecasts, keys }) => {
     }
     };
 
-  return <Line data={data} options={option} key={keys} />;
+  return <Line data={data} options={option}  />;
 };
 
 export default LineChart;
