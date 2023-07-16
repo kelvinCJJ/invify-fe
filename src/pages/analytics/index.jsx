@@ -118,10 +118,10 @@ const Analytics = () => {
         {/* <Typography variant="h4" component="h1">
           Sales Trends
         </Typography> */}
-        <div className="grid grid-col-">
+        <div className="grid grid-col-1">
             Sales Trends (Revenue)
             <div className="max-h-[80vh] object-center">
-            <LineChart currentData={salesTrends.totalSales} forecasts={salesTrends.totalRevenue}/>
+            <LineChart data1={salesTrends.totalSales} data2={salesTrends.totalRevenue} label1={"Total Sales per Month"} label2={"Total Revenue per Month"} />
             </div>
         </div>
          

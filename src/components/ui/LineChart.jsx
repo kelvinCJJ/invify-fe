@@ -8,7 +8,7 @@ Chart.register(
   LinearScale,
 )
 
-const LineChart = ({ currentData, forecasts }) => {
+const LineChart = ({ data1, data2, label1, label2 }) => {
   const data = {
     
       labels: [
@@ -27,16 +27,16 @@ const LineChart = ({ currentData, forecasts }) => {
       ],
       datasets: [
         {
-          label: "Current",
-          data: currentData,
+          label: label1,
+          data: data1,
           fill: false,
           backgroundColor: "rgb(252, 161, 36)",
           borderColor: "rgba(252, 161, 36, 0.5)",
         },
         {
-          label: "Forecast",
+          label: label2,
           // data: forecasts.map(forecast => forecast.TotalQuantity || 0),
-          data: forecasts,
+          data: data2,
           fill: false,
           backgroundColor: "rgb(27, 163, 142)",
           borderColor: "rgba(27, 163, 142,0.5)",

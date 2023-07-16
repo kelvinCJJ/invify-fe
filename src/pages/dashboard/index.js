@@ -159,8 +159,10 @@ const Dashboard = () => {
               <div className="col-span-2  rounded">
                 Sales Forecast (2023)
                 <LineChart
-                  currentData={yearlySalesForecast.actualData}
-                  forecasts={yearlySalesForecast.forecastedData}
+                  data1={yearlySalesForecast.actualData}
+                  data2={yearlySalesForecast.forecastedData}
+                  label1={"Actual Sales"}
+                  label2={"Forecasted Sales"}
                 />
               </div>
             </div>
@@ -197,8 +199,10 @@ const Dashboard = () => {
               <div className="col-span-2 text-lg rounded">
                 Sales Forecast (2023)
                 <LineChart
-                  currentData={yearlySalesForecast.actualData}
-                  forecasts={yearlySalesForecast.forecastedData}
+                  data1={yearlySalesForecast.actualData}
+                  data2={yearlySalesForecast.forecastedData}
+                  label1={"Actual Sales"}
+                  label2={"Forecasted Sales"}
                 />
               </div>
             </div>
@@ -235,10 +239,10 @@ const Dashboard = () => {
               <div className="col-span-2 rounded">
                 Sales Forecast (2023)
                 <LineChart
-                  currentData={yearlySalesForecast.actualData}
-                  forecasts={yearlySalesForecast.forecastedData}
-                  id="yearlySalesForecast"
-                  key={1}
+                  data1={yearlySalesForecast.actualData}
+                  data2={yearlySalesForecast.forecastedData}
+                  label1={"Actual Sales"}
+                  label2={"Forecasted Sales"}
                 />
               </div>
             </div>
