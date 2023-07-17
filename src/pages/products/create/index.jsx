@@ -149,7 +149,7 @@ const CreateProduct = () => {
     }
     
     if (formik.values.name != "") {
-      const input = "Write a less than 100 word product description for " + formik.values.name+". Dont write anything else";
+      const input = "Don't search the web, just write a less than 100 word product description for " + formik.values.name+". ";
       const timeoutId = setTimeout(() => {
         fetchDescription(input);
       }, 2000);
