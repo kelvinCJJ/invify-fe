@@ -7,10 +7,6 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import IconButton from '@mui/material/IconButton';
 import { DatePicker } from '@mui/x-date-pickers';
 
-const DateRangePickerWrapper = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-});
 
 const DateRangePicker = () => {
   const [anchorEl, setAnchorEl] = useState(null);

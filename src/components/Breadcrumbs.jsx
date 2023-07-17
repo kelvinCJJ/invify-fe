@@ -33,7 +33,6 @@ const Breadcrumbs = ({path}) => {
           {label}
         </Link>
       );
-    //   breadcrumbs.push(<span key={`divider-${i}`}>/</span>);
     }
   }
 

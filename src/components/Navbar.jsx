@@ -89,7 +89,6 @@ const Navbar = ({ username }) => {
             localStorage.clear();
             router.push("/login");
           } else {
-            console.log(res.data.message);
           }
         });
     } catch (err) {

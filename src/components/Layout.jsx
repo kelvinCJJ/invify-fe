@@ -68,7 +68,6 @@ export default function Layout({ children }) {
   };
 
   useEffect(() => {
-    //console.log("useEffect");
     function getAuth() {
       try {
         const token = getToken();
@@ -77,7 +76,6 @@ export default function Layout({ children }) {
           return;
         }
         const isTokenExpiredResult = isTokenExpired(token);
-        //console.log("tokenexpired: " + isTokenExpiredResult);
         if (isTokenExpiredResult) {
           router.push("/login");
         } else {

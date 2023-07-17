@@ -27,16 +27,15 @@ const LineChart = ({ data1, data2, label1, label2 }) => {
       ],
       datasets: [
         {
-          label: label1,
-          data: data1,
+          label: label1 || "null",
+          data: data1 || 0,
           fill: false,
           backgroundColor: "rgb(252, 161, 36)",
           borderColor: "rgba(252, 161, 36, 0.5)",
         },
         {
-          label: label2,
-          // data: forecasts.map(forecast => forecast.TotalQuantity || 0),
-          data: data2,
+          label: label2 || "null",
+          data: data2 || 0,
           fill: false,
           backgroundColor: "rgb(27, 163, 142)",
           borderColor: "rgba(27, 163, 142,0.5)",

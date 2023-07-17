@@ -9,14 +9,6 @@ import { Alert } from "@mui/material";
 
   if (!snackbarOpen) return null;
 
-  // const handleClose = (event, reason) => {
-  //   if (reason === "clickaway") {
-  //     return;
-  //   }
-
-  //   setSnackbarOpen(false);
-  // };
-
   return (
     snackbarMessage ?
     <MuiSnackbar
@@ -31,19 +23,6 @@ import { Alert } from "@mui/material";
       </Alert>
     </MuiSnackbar>
     : null
-    // message ?
-    // <MuiSnackbar
-    //   anchorOrigin={{ vertical: "top", horizontal: "right" }}
-    //   open={open}
-    //   autoHideDuration={6000}
-    //   onClose={handleClose}
-    //   TransitionComponent={props => <Slide {...props} direction="left" />}
-    // >
-    //   <Alert variant="filled" onClose={handleClose} severity={severity} sx={{ width: "100%" }}>
-    //     {message}
-    //   </Alert>
-    // </MuiSnackbar>
-    // : null
   );
 };
 

@@ -65,7 +65,6 @@ const Sidebar = ({ children, auth }) => {
                 onClick={handleCloseSideBar}
                 activeClassName={activeLink}
                 className= {normalLink}  
-                //className="flex flex-row space-x-3 hover:bg-pastel-blue hover:text-gray-100 content-center cursor-pointer  p-3 m-3 rounded-lg text-xs lg:text-base "
               >
                 <Dashboard  />
                 <p >Dashboard</p>

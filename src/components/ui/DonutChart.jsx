@@ -6,20 +6,6 @@ import { mockPieData } from "@/data/mockData";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 const DonutChart = ({ currentData }) => {
-  //apex chart pie chart
-  // const pieChartData = {
-  //   // chart: {
-  //   //   type: 'bar'
-  //   // },
-  //   series: [{
-  //     name: 'top 5 products',
-  //     data: seriesData
-  //   }],
-  //   xaxis: {
-  //     categories: categoriesData
-  //   }
-  // };
-
   const data = {
     labels: currentData.labelData,
     datasets: [

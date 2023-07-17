@@ -53,7 +53,6 @@ const SortableTable = ({ headers, rows, pageurl, onDelete, buttons=true }) => {
   //Pagination
   const filteredRows = rows.filter((row) =>
     Object.values(row).some((value) => {
-      //console.log(value);
       return value !==null ? value.toString().toLowerCase().includes(searchQuery.toLowerCase()) : false;
       
     })
@@ -95,7 +94,6 @@ const SortableTable = ({ headers, rows, pageurl, onDelete, buttons=true }) => {
         { label: "Cancel", onClick: () => closeModal(), severity: "info" },
       ],
     });
-    console.log("delete");
   };
 
   const deleteCategory = (rowId) => {
