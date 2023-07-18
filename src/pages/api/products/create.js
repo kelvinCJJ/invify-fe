@@ -4,7 +4,6 @@ export default async function create(req, res) {
   
   const api = new BingChat({
     cookie: process.env.BING_COOKIE,
-    debug: true
   })
   console.log(req.body)
   const resp = await api.sendMessage(req.body.inputs, {variant: "Precise"})

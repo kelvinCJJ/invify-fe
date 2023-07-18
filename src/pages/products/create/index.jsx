@@ -1,40 +1,30 @@
 //add product page
-import React, { useRef } from "react";
+import Layout from "@/components/Layout";
+import BGrid from "@/components/ui/BGrid";
+import { useStateContext } from "@/contexts/ContextProvider";
 import {
   Autocomplete,
   Button,
   CircularProgress,
-  FormGroup,
   Grid,
   InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
-  debounce,
 } from "@mui/material";
-import { useFormik } from "formik";
 import axios from "axios";
-import Layout from "@/components/Layout";
+import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import BGrid from "@/components/ui/BGrid";
-import { useStateContext } from "@/contexts/ContextProvider";
-import { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 
 const CreateProduct = () => {
-  const router = useRouter();
   const { openSnackbar } = useStateContext();
   const openSnackbarRef = useRef(openSnackbar);
   const [categories, setCategories] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [open, setOpen] = React.useState(false);
-  const [options, setOptions] = React.useState([]);
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isDescriptionLoading, setIsDescriptionLoading] = useState(false);
-
 
   useEffect(() => {
     openSnackbarRef.current = openSnackbar;
@@ -149,13 +139,15 @@ const CreateProduct = () => {
     }
     
     if (formik.values.name != "") {
-      const input = "Don't search the web, just write a less than 100 word product description for " + formik.values.name+". ";
+      const input = "Write a less than 100 word product description for " + formik.values.name+". ";
       const timeoutId = setTimeout(() => {
         fetchDescription(input);
       }, 2000);
       return () => clearTimeout(timeoutId);
     }
     
+    
+
   }, [formik.values.name]);
 
   return (
