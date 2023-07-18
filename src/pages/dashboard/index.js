@@ -127,7 +127,7 @@ const Dashboard = () => {
       ) : (
         <BasicTabs>
           <div label="Last Year">
-            <div className="grid grid-col-1 gap-2 md:grid-cols-3 md:gap-2">
+            <div className="grid grid-col-1 gap-4 md:grid-cols-3 md:gap-2">
               <Card
                 title="Total revenue this year"
                 value={totalRevenueThisYear}
@@ -145,18 +145,18 @@ const Dashboard = () => {
                 icon={<Shop2 />}
               />
             </div>
-            <div className="grid grid-col-1 md:grid-cols-3 md:gap-4 mt-4 max-h-screen">
+            <div className="grid grid-col-1 lg:grid-cols-3 lg:gap-4 mt-4">
               <div className="col-span-1 rounded">
                 <div className="text-lg mb-2">Top 5 Products this year</div>
                 {{ top5ProductsThisYear }.length > 0 ? (
                   <div>No data available</div>
                 ) : (
-                  <div>
+                  <div className="min-h-[300px] max-h-[600px] lg:min-h-[400px] lg:max-h-[600px] rounded">
                     <PieChart currentData={top5ProductsThisYear} />
                   </div>
                 )}
               </div>
-              <div className="col-span-2  rounded">
+              <div className="col-span-2 min-h-[200px] max-h-[300px] lg:min-h-[400px] lg:max-h-[450px] rounded">
                 Sales Forecast (2023)
                 <LineChart
                   data1={yearlySalesForecast.actualData}
@@ -185,18 +185,18 @@ const Dashboard = () => {
                 icon={<Shop2 />}
               />
             </div>
-            <div className="grid grid-col-1 md:grid-cols-3 md:gap-4 mt-4">
+            <div className="grid grid-col-1 md:grid-cols-3 md:gap-4 mt-4 ">
               <div className="col-span-1   rounded">
                 <div className="text-lg mb-2">Top 5 Products last month</div>
                 {{ top5ProductsLastMonth }.length < 0 ? (
                   <div>No data available</div>
                 ) : (
-                  <div>
+                  <div className="min-h-[300px] max-h-[600px] lg:min-h-[400px] lg:max-h-[600px] rounded">
                     <PieChart currentData={top5ProductsLastMonth} />
                   </div>
                 )}
               </div>
-              <div className="col-span-2 text-lg rounded">
+              <div className="col-span-2 min-h-[200px] max-h-[300px] lg:min-h-[400px] lg:max-h-[450px] rounded">
                 Sales Forecast (2023)
                 <LineChart
                   data1={yearlySalesForecast.actualData}
@@ -231,12 +231,12 @@ const Dashboard = () => {
                 {{ top5ProductsLastWeek }.length > 0 ? (
                   <div>No data available</div>
                 ) : (
-                  <div>
+                  <div className="col-span-1 min-h-[300px] max-h-[600px] lg:min-h-[400px] lg:max-h-[600px] rounded">
                     <PieChart currentData={top5ProductsLastWeek} />
                   </div>
                 )}
               </div>
-              <div className="col-span-2 rounded">
+              <div className="col-span-2 min-h-[200px] max-h-[300px] lg:min-h-[400px] lg:max-h-[450px] rounded">
                 Sales Forecast (2023)
                 <LineChart
                   data1={yearlySalesForecast.actualData}
@@ -249,7 +249,7 @@ const Dashboard = () => {
           </div>
         </BasicTabs>
       )}
-      <div className="text-lg bg-darkaccent-800 p-4 rounded">
+      <div className="text-lg bg-darkaccent-800 p-4 mt-2 lg:mt-4 rounded">
         Products Low on Stock
         <SortableTable
           headers={headers}

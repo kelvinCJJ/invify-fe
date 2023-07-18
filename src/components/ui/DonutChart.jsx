@@ -22,7 +22,7 @@ const DonutChart = ({ currentData }) => {
 
   const option = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top",
