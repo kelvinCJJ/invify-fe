@@ -31,7 +31,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-loading-skeleton": "^3.3.1",
-    "react-scan-qr": "^1.0.1",
+    "react-scan-qr": "github:kelvinCJJ/react-scan-qr",
     "tailwindcss": "3.3.1",
     "yup": "^1.1.1"
   }

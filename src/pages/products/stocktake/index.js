@@ -5,7 +5,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useStateContext } from "@/contexts/ContextProvider";
 import QrReader from "react-scan-qr";
-//import { QrScanner } from "@yudiel/react-qr-scanner";
 
 const Stocktake = () => {
   const [startScan, setStartScan] = useState(false);
