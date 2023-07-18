@@ -157,7 +157,6 @@ const EditProduct = () => {
             </h1>
           </Grid>
           <Grid item xs={12} md={6}>
-            <div className="">
               <TextField
                 required
                 fullWidth
@@ -354,14 +353,15 @@ const EditProduct = () => {
                   formik.touched.restockLevel && formik.errors.restockLevel
                 }
               />
-              <Button
-                type="submit"
-                className="text-white bg-darkshade-400 font-semibold lowercase p-2 rounded-lg"
-                disabled={isSubmitting}
-              >
-                Submit
-              </Button>
-            </div>
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              type="submit"
+              className="text-white bg-darkshade-400 font-semibold lowercase p-2 rounded-lg"
+              disabled={isSubmitting}
+            >
+              Submit
+            </Button>
           </Grid>
         </BGrid>
       </form>

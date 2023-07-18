@@ -323,6 +323,9 @@ const CreateProduct = () => {
                 )}
               />
             </div>
+            
+          </Grid>
+          <Grid item xs={12}>
             <Button
               type="submit"
               className="text-white bg-darkshade-400 font-semibold lowercase p-2 rounded-lg"

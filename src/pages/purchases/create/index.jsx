@@ -129,7 +129,6 @@ const CreatePurchase = () => {
             </h1>
           </Grid>
           <Grid item xs={12} md={6}>
-            <div className="">
               <Autocomplete
                 open={openProduct}
                 color="light"
@@ -277,16 +276,16 @@ const CreatePurchase = () => {
                   );
                 }}
               />
-              <div className="mt-4">
-              <Button
-                type="submit"
-                className="text-white bg-darkshade-400 font-semibold lowercase p-2 rounded-lg"
-                disabled={isSubmitting}
-              >
-                Submit
-              </Button>
-              </div>
-            </div>
+              
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              type="submit"
+              className="text-white bg-darkshade-400 font-semibold lowercase p-2 rounded-lg"
+              disabled={isSubmitting}
+            >
+              Submit
+            </Button>
           </Grid>
         </BGrid>
       </form>
