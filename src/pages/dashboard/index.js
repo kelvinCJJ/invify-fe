@@ -231,7 +231,7 @@ const Dashboard = () => {
                 {{ top5ProductsLastWeek }.length > 0 ? (
                   <div>No data available</div>
                 ) : (
-                  <div className="col-span-1 min-h-[300px] max-h-[600px] lg:min-h-[400px] lg:max-h-[600px] rounded">
+                  <div className=" min-h-[300px] max-h-[600px] lg:min-h-[400px] lg:max-h-[600px] rounded">
                     <PieChart currentData={top5ProductsLastWeek} />
                   </div>
                 )}
