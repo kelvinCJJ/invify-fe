@@ -15,15 +15,14 @@ export default function App({
   const getLayout = Component.getLayout || ((page) => page);
 
   return getLayout(
+    <ThemeProvider theme={theme2}>
       <ContextProvider>
-        <CssBaseline />
-        <ThemeProvider theme={theme2}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-        {/* <CssBaseline /> */}
-        <Component {...pageProps} />
+          <CssBaseline />
+          <Component {...pageProps} />
         </LocalizationProvider>
-        </ThemeProvider>
       </ContextProvider>
+    </ThemeProvider>
   );
 
 }

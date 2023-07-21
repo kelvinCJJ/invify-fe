@@ -8,32 +8,32 @@ export const theme2 = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#DFE1DA',
+      main: '#162932',
       light: '#7c8f98',
       dark: '#162932',
     },
     secondary: {
-      main: '#ff49db',
+      main: '#992c83',
       light: '#ff92e9',
       dark: '#992c83',
     },
     error: {
-      main: '#f44336',
+      main: '#922820',
       light: '#f88e86',
       dark: '#922820',
     },
     warning: {
-      main: '#bd7f19',
+      main: '#714c0f',
       light: '#d7b275',
       dark: '#714c0f',
     },
     info: {
-      main: '#202630',
+      main: '#13171d',
       light: '#797d83',
       dark: '#13171d',
     },
     success: {
-      main: '#408f51',
+      main: '#265631',
       light: '#8cbc97',
       dark: '#265631',
     },
