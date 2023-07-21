@@ -92,11 +92,11 @@ export const theme2 = createTheme({
 });
 
 // mui theme settings
-const theme = createTheme({
-  palette: {
-    white: {
-      main: "#ffffff",
-    },
-  },
+//const theme = createTheme({
+//  palette: {
+//    white: {
+//      main: "#ffffff",
+//    },
+//  },
   
 });
