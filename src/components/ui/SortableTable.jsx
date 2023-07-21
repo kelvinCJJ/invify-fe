@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Table,
   TableHead,
@@ -10,19 +10,16 @@ import {
   TablePagination,
   TableContainer,
   InputAdornment,
+  Button,
 } from "@mui/material";
 import {
   DeleteForever,
   Edit,
-  Search,
-  SearchOutlined,
+  Search
 } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import axios from "axios";
-import Button from "./Button";
 import { useStateContext } from "@/contexts/ContextProvider";
-import UniversalModal from "./UniversalModal";
-import { useEffect } from "react";
 
 const SortableTable = ({ headers, rows, pageurl, onDelete, buttons=true }) => {
   const [orderBy, setOrderBy] = useState("");
@@ -192,11 +189,8 @@ const SortableTable = ({ headers, rows, pageurl, onDelete, buttons=true }) => {
                   {buttons && (
                   <TableCell className="p-1 m-1 lg:space-x-2">
                     <Button
-                      variant="contained"
-                      //href={`${pageurl}/${row.id}`}
-                      severity="info"
+                      className="text-md md:text-base rounded-md normal-case p-2 lg:px-4  text-white bg-info-500 hover:bg-info-800"
                       onClick={() => handleEdit(row.id)}
-                      //className="bg-main-500 hover:bg-main-700  mr-2 "
                     >
                       <Edit
                         style={{
@@ -206,8 +200,7 @@ const SortableTable = ({ headers, rows, pageurl, onDelete, buttons=true }) => {
                       />
                     </Button>
                     <Button
-                      variant="contained"
-                      severity="error"
+                      className="text-md md:text-base  rounded-md normal-case p-2 lg:px-4 text-white bg-warning-500 hover:bg-warning-800"
                       onClick={() => handleDelete(row.id)}
                     >
                       <DeleteForever

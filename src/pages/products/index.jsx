@@ -2,11 +2,10 @@
   import Layout from "@/components/Layout";
   import { useState, useEffect } from "react";
   import axios from "axios";
-  import { Snackbar } from "@mui/material";
+  import { Button, Snackbar } from "@mui/material";
   import SortableTable from "@/components/ui/SortableTable";
   import { useRouter } from "next/router";
   import UniversalModal from "@/components/ui/UniversalModal";
-  import Button from "@/components/ui/Button";
   import { useStateContext } from "@/contexts/ContextProvider";
   import { Add } from "@mui/icons-material";
   
@@ -96,11 +95,11 @@
         <div className="my-2">
         </div>
         <div className="flex flex-row space-x-2">
-          <Button href="/products/create">
+          <Button className="text-md md:text-base text-primary-900 rounded-md normal-case p-2 lg:px-4  bg-lightshade-500 hover:bg-lightshade-600" href="/products/create">
             <Add />
             New Product
           </Button>
-          <Button href="/products/stocktake">
+          <Button className="text-md md:text-base text-primary-900 rounded-md normal-case p-2 lg:px-4  bg-lightshade-500 hover:bg-lightshade-600" href="/products/stocktake">
             <Add />
             StockTake
           </Button>

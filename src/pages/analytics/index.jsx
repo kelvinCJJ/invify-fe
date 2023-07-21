@@ -10,19 +10,19 @@ const productProfitabilityHeaders = [
     { id: "productName", label: "Product", disablePadding: false, numeric: false },
     {
       id: "totalRevenue",
-      label: "Total Revenue",
+      label: "Total Revenue ($)",
       disablePadding: false,
       numeric: false,
     },
     {
       id: "totalCost",
-      label: "Total Cost",
+      label: "Total Cost ($)",
       disablePadding: false,
       numeric: false,
     },
     {
       id: "profit",
-      label: "Profit",
+      label: "Profit/Loss ($)",
       disablePadding: false,
       numeric: false,
     },

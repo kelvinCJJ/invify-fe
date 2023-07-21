@@ -2,14 +2,11 @@
 import Layout from "@/components/Layout";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Snackbar } from "@mui/material";
 import SortableTable from "@/components/ui/SortableTable";
-import { useRouter } from "next/router";
-import UniversalModal from "@/components/ui/UniversalModal";
-import Button from "@/components/ui/Button";
 import { useStateContext } from "@/contexts/ContextProvider";
 import { Add } from "@mui/icons-material";
 import dayjs from "dayjs";
+import { Button } from "@mui/material";
 
 function Sales() {
   const [headData, setHeadData] = useState([]);
@@ -80,7 +77,7 @@ function Sales() {
       <div className="my-2">
       </div>
       <div className="flex flex-row ">
-        <Button variant="contained" href="/sales/create">
+        <Button className="text-md md:text-base text-primary-900 rounded-md normal-case p-2 lg:px-4  bg-lightshade-500 hover:bg-lightshade-600" href="/sales/create">
           <Add />
           New Sales
         </Button>
