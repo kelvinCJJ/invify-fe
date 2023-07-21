@@ -96,11 +96,11 @@
         <div className="my-2">
         </div>
         <div className="flex flex-row space-x-2">
-          <Button variant="contained" href="/products/create">
+          <Button href="/products/create">
             <Add />
             New Product
           </Button>
-          <Button variant="contained" href="/products/stocktake">
+          <Button href="/products/stocktake">
             <Add />
             StockTake
           </Button>

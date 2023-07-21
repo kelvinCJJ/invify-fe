@@ -1,14 +1,12 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
-import { ErrorMessage, Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import axios from "axios";
-import { Alert, Grid, TextField } from "@mui/material";
-import Image from "next/image";
+import { Alert, TextField } from "@mui/material";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import jwt, { verify } from "jsonwebtoken";
-import Button from "@/components/ui/Button";
 import * as Yup from "yup";
+import Button from "@/components/ui/Button";
 
 export const metadata = {
   title: "Login",
@@ -119,7 +117,7 @@ export default function Login() {
             type="submit"
             disabled={isSubmitting}
           >
-            Submit
+            Login
           </Button>
         </form>
         <p className="px-8 text-center text-sm text-slate-500 ">

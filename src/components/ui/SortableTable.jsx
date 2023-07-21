@@ -207,10 +207,8 @@ const SortableTable = ({ headers, rows, pageurl, onDelete, buttons=true }) => {
                     </Button>
                     <Button
                       variant="contained"
-                      //href={`${pageurl}/${row.id}`}
                       severity="error"
                       onClick={() => handleDelete(row.id)}
-                      //className="bg-main-500 hover:bg-main-700"
                     >
                       <DeleteForever
                         style={{

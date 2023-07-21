@@ -6,7 +6,7 @@ import { AttachMoney, Paid, Sell, Shop, Shop2 } from "@mui/icons-material";
 import axios, { all } from "axios";
 import SortableTable from "@/components/ui/SortableTable";
 import PieChart from "@/components/ui/DonutChart";
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, ButtonBase, Tab, Tabs, Typography } from "@mui/material";
 import LineChart from "@/components/ui/LineChart";
 import DateRangePicker from "@/components/ui/DateRangePicker";
 import BasicTabs from "@/components/ui/BasicTabs";
@@ -144,7 +144,9 @@ const Dashboard = () => {
             </div>
             <div className="grid grid-col-1 lg:grid-cols-3 lg:gap-4 mt-4">
               <div className="col-span-1 rounded">
-                <div className="text-lg mb-2">Top 5 Products this year</div>
+                <div className="flex flex-row text-lg mb-2 justify-center">
+                  Top 5 Products this year
+                </div>
                 {{ top5ProductsThisYear }.length > 0 ? (
                   <div>No data available</div>
                 ) : (
@@ -154,7 +156,12 @@ const Dashboard = () => {
                 )}
               </div>
               <div className="col-span-2 min-h-[200px] max-h-[300px] lg:min-h-[400px] lg:max-h-[450px] rounded">
-                Sales Forecast (2023)
+                <div className="flex flex-row text-lg gap-x-2 items-center justify-center">
+                  Sales Forecast (2023)
+                  <ButtonBase className="bg-warning-500 text-md p-1 rounded">
+                    Train model
+                  </ButtonBase>
+                </div>
                 <LineChart
                   data1={yearlySalesForecast.actualData}
                   data2={yearlySalesForecast.forecastedData}
@@ -184,7 +191,9 @@ const Dashboard = () => {
             </div>
             <div className="grid grid-col-1 md:grid-cols-3 md:gap-4 mt-4 ">
               <div className="col-span-1   rounded">
-                <div className="text-lg mb-2">Top 5 Products last month</div>
+                <div className="flex flex-row text-lg mb-2 justify-center">
+                  Top 5 Products last month
+                </div>
                 {{ top5ProductsLastMonth }.length < 0 ? (
                   <div>No data available</div>
                 ) : (
@@ -194,7 +203,13 @@ const Dashboard = () => {
                 )}
               </div>
               <div className="col-span-2 min-h-[200px] max-h-[300px] lg:min-h-[400px] lg:max-h-[450px] rounded">
-                Sales Forecast (2023)
+                <div className="flex flex-row text-lg gap-x-2 items-center justify-center">
+                  Sales Forecast (2023)
+                  <ButtonBase className="bg-warning-500 text-md p-1 rounded">
+                    Train model
+                  </ButtonBase>
+                </div>
+
                 <LineChart
                   data1={yearlySalesForecast.actualData}
                   data2={yearlySalesForecast.forecastedData}
@@ -224,7 +239,9 @@ const Dashboard = () => {
             </div>
             <div className="grid grid-col-1 md:grid-cols-3 md:gap-4 mt-4">
               <div className="col-span-1 rounded">
-                <div className="text-lg mb-2">Top 5 Products last week</div>
+                <div className="flex flex-row text-lg mb-2 justify-center">
+                  Top 5 Products last week
+                </div>
                 {{ top5ProductsLastWeek }.length > 0 ? (
                   <div>No data available</div>
                 ) : (
@@ -234,7 +251,12 @@ const Dashboard = () => {
                 )}
               </div>
               <div className="col-span-2 min-h-[200px] max-h-[300px] lg:min-h-[400px] lg:max-h-[450px] rounded">
-                Sales Forecast (2023)
+                <div className="flex flex-row text-lg gap-x-2 items-center justify-center">
+                  Sales Forecast (2023)
+                  <ButtonBase className="bg-warning-500 text-md p-1 rounded">
+                    Train model
+                  </ButtonBase>
+                </div>
                 <LineChart
                   data1={yearlySalesForecast.actualData}
                   data2={yearlySalesForecast.forecastedData}
