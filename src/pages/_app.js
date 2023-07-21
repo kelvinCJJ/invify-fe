@@ -16,9 +16,10 @@ export default function App({
 
   return getLayout(
       <ContextProvider>
+        <CssBaseline />
         <ThemeProvider theme={theme2}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <CssBaseline />
+        {/* <CssBaseline /> */}
         <Component {...pageProps} />
         </LocalizationProvider>
         </ThemeProvider>
