@@ -1,40 +1,24 @@
 // components/layout.js
 
 import Navbar from "./Navbar";
-import Footer from "./Footer";
 import Sidebar from "./Sidebar";
-import { Tooltip } from "@mui/material";
-import { NavigateNext, SettingsApplications } from "@mui/icons-material";
 import { useEffect } from "react";
 import { useStateContext } from "@/contexts/ContextProvider";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { decode, verify } from "jsonwebtoken";
-import process from "process";
-import Link from "next/link";
+import { decode } from "jsonwebtoken";
 import Breadcrumbs from "./Breadcrumbs";
-import Snackbar from "./ui/Snackbar";
-import axios from "axios";
 const jwt = require("jsonwebtoken");
 
 export default function Layout({ children }) {
   const router = useRouter();
   const path = router.asPath;
   const [userName, setUserName] = useState("test");
-  const { auth, setAuth } = useState(false);
   const { isTokenExpiredResult, setIsTokenExpiredResult } = useState(false);
-  const [open, setOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [severity, setSeverity] = useState("success");
 
   const {
     activeMenu,
-    setActiveMenu,
-    handleClick,
-    isClicked,
-    setScreenSize,
-    screenSize,
   } = useStateContext();
 
   function isTokenExpired(token) {

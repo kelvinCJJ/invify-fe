@@ -194,7 +194,7 @@ const SortableTable = ({ headers, rows, pageurl, onDelete, buttons=true }) => {
                     <Button
                       variant="contained"
                       //href={`${pageurl}/${row.id}`}
-                      severity={"light"}
+                      severity="info"
                       onClick={() => handleEdit(row.id)}
                       //className="bg-main-500 hover:bg-main-700  mr-2 "
                     >

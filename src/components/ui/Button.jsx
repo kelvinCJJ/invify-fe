@@ -1,9 +1,8 @@
 import React from 'react';
-import { Button as MuiButton } from '@mui/material';
+import { ButtonBase, Button as MuiButton } from '@mui/material';
 
 const Button = ({ severity, children, ...props }) => {
-    let className = 'text-md  md:text-base  rounded-md normal-case'
-  
+    let className = 'text-md  md:text-base rounded-md normal-case p-2'
     switch (severity) {
       case 'error':
         className += ' text-white bg-error-500 hover:bg-error-800';
@@ -26,9 +25,9 @@ const Button = ({ severity, children, ...props }) => {
     }
   
     return (
-      <MuiButton className={className} {...props}>
+      <ButtonBase className={className} {...props}>
         {children}
-      </MuiButton>
+      </ButtonBase>
     );
   };
   

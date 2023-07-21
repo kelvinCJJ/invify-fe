@@ -116,7 +116,6 @@ export default function Login() {
           <Button
             type="submit"
             variant="filled"
-            severity=""
             disabled={isSubmitting}
           >
             Submit
