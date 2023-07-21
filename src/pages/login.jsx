@@ -32,6 +32,12 @@ export default function Login() {
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true);
+      if(values.email == "" || values.password == ""){
+        setErrorMessage("Please fill all the fields");
+        setSubmitting(false);
+        return;
+      };
+
       const credential = JSON.stringify(values, null, 2);
       try {
         const user = await axios
@@ -111,14 +117,11 @@ export default function Login() {
           </div>
           <Button
             type="submit"
-            variant="filled"
             disabled={isSubmitting}
           >
             Submit
           </Button>
         </form>
-        {/* )}
-        </Formik> */}
         <p className="px-8 text-center text-sm text-slate-500 ">
           <Link
             href="/register"
