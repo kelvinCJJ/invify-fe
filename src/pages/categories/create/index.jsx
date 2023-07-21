@@ -31,13 +31,7 @@ const CreateCategory = () => {
           },
         })
         .then((res) => {
-          console.log(res);
           if (res.status == 200) {
-            // router.push({
-            //   pathname: "/categories",
-            //   //query: { snackbar: res.data.message },
-            //   // Replace [id] with the ID of the newly created item
-            // });
             openSnackbar("Category created successfully", "success");
             formik.setValues({
               name: "",
@@ -48,10 +42,6 @@ const CreateCategory = () => {
           }
         })
         .catch((err) => {
-          console.log(err);
-          // setSnackbarMessage(err.response.data.message);
-          // setSnackbarSeverity("error");
-          // setSnackbarOpen(true);
           openSnackbar(err.response.data.message, "error");
         })
         .finally(() => {
@@ -62,12 +52,6 @@ const CreateCategory = () => {
 
   return (
     <Layout>
-      {/* <Snackbar
-        open={open}
-        setOpen={setOpen}
-        message={snackbarMessage}
-        severity={severity}
-      /> */}
       <form onSubmit={formik.handleSubmit} >
         <BGrid >
           <Grid item xs={12}>

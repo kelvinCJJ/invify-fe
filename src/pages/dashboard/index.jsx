@@ -55,7 +55,7 @@ const Dashboard = () => {
               top5ProductsResponse,
               lowStockResponse
             ) => {
-              console.log(dashboardResponse.data);
+              //console.log(dashboardResponse.data);
               setTotalRevenueThisYear(
                 "$" + dashboardResponse.data.totalRevenueThisYear
               );
@@ -72,10 +72,10 @@ const Dashboard = () => {
               setTotalSalesLastWeek(dashboardResponse.data.totalSalesLastWeek);
               setTotalProducts(dashboardResponse.data.totalProducts);
 
-              console.log(forecastResponse.data);
+              //console.log(forecastResponse.data);
               setYearlySalesForecast(forecastResponse.data);
 
-              console.log(top5ProductsResponse.data);
+              //console.log(top5ProductsResponse.data);
               setTop5ProductsThisYear(
                 top5ProductsResponse.data.top5ProductsThisYearData
               );
@@ -90,9 +90,6 @@ const Dashboard = () => {
             }
           )
         )
-        .catch((error) => {
-          console.log(error);
-        })
         .finally(() => {
           setLoading(false);
         });

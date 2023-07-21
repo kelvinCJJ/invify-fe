@@ -35,13 +35,11 @@ const EditSupplier = () => {
           },
         })
         .then((res) => {
-          //console.log(res);
           if (res.status == 200) {
             openSnackbarRef.current("Supplier updated successfully", "success");
           }
         })
         .catch((err) => {
-          //console.log(err);
           openSnackbarRef.current(err.response.data.message, 'error');
         });
     },
@@ -62,7 +60,6 @@ const EditSupplier = () => {
             },
           })  
           .then((res) => {
-            console.log(res);
             setSupplier(res.data);
           })
       } catch (error) {

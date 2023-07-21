@@ -35,7 +35,6 @@ const CreateSupplier = () => {
           },
         })
         .then((res) => {
-          console.log(res);
           if (res.status == 200) {
             openSnackbar("Supplier created successfully", "success");
             formik.resetForm();

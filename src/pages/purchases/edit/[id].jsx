@@ -80,7 +80,6 @@ const EditPurchase = () => {
         );
         setSelectedProductOption(product);
       } catch (error) {
-        console.log(error);
         openSnackbarRef.current(error.message, "error");
       }
     };
@@ -115,7 +114,6 @@ const EditPurchase = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       setIsSubmitting(true);
-      console.log("test");
       axios
         .put(process.env.APIURL + "/purchases/" + purchaseId, values, {
           headers: {
@@ -124,7 +122,6 @@ const EditPurchase = () => {
           },
         })
         .then((res) => {
-          console.log(res);
           if (res.status == 200) {
             openSnackbarRef.current("Purchase updated successfully",
             "success");
@@ -133,7 +130,6 @@ const EditPurchase = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
           openSnackbarRef.current(error.message, "error");
         })
         .finally(() => {

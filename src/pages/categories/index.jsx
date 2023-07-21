@@ -44,7 +44,6 @@ function Categories() {
           },
         })
         .then((res) => {
-          console.log(res.data);
           res.data.map((item) => {
             item.dateTimeCreated = new dayjs(item.dateTimeCreated).format("DD/MM/YYYY");
           });
@@ -52,7 +51,6 @@ function Categories() {
           setLoading(false);
         });
     } catch (err) {
-      console.log(err);
       openSnackbar("error", "Error getting categories");
     }
   }

@@ -38,7 +38,6 @@ const EditProduct = () => {
   }, [openSnackbar]);
 
   useEffect(() => {
-    console.log(productId);
     let isCancelled = false;
     async function fetchData() {
       try {
@@ -68,7 +67,6 @@ const EditProduct = () => {
         );
         setSelectedOption(category);
       } catch (error) {
-        console.log(error);
         openSnackbarRef.current('error', 'error');
       }
       setLoading(false);
@@ -114,7 +112,6 @@ const EditProduct = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       setIsSubmitting(true);
-      console.log(values);
       axios
         .put(process.env.APIURL + "/products/" + productId, values, {
           headers: {
@@ -123,7 +120,6 @@ const EditProduct = () => {
           },
         })
         .then((res) => {
-          console.log(res);
           if (res.status == 200) {
             openSnackbar(
               "Product [" + values.name + "] updated successfully",
@@ -134,7 +130,6 @@ const EditProduct = () => {
           }
         })
         .catch((err) => {
-          console.log(err);
           openSnackbar(err.response.data.message, "error");
         })
         .finally(() => {

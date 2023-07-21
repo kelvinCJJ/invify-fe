@@ -42,7 +42,6 @@ export const ContextProvider = ({ children }) => {
     setSnackbarOpen(false);
     setSnackbarMessage('');
     setSnackbarSeverity('info');
-    //console.log('closeSnackbar');
   };
 
   const openModal = (props) => setModalProps({ ...props, open: true });

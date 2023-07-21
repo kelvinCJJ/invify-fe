@@ -46,7 +46,6 @@ function Purchases() {
             },
           })
           .then((res) => {
-             console.log(res.data);
             setRowData(res.data);
           });
           

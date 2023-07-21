@@ -53,7 +53,6 @@ const CreatePurchase = () => {
         setSupplierOptions(suppliersRes.data);
         setProductOptions(productRes.data);
       } catch (error) {
-        console.log(error);
         openSnackbarRef.current(error.message, "error");
       }
     };
@@ -87,7 +86,6 @@ const CreatePurchase = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       setIsSubmitting(true);
-      console.log("test");
       axios
         .post(process.env.APIURL + "/purchases/", values, {
           headers: {
@@ -96,7 +94,6 @@ const CreatePurchase = () => {
           },
         })
         .then((res) => {
-          console.log(res);
           if (res.status == 200) {
             openSnackbarRef.current("Purchase updated successfully",
             "success");
@@ -106,7 +103,6 @@ const CreatePurchase = () => {
           }
         })
         .catch((error) => {
-          console.log(error);
           openSnackbarRef.current(error.message, "error");
         })
         .finally(() => {

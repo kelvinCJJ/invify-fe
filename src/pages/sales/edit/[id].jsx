@@ -66,7 +66,6 @@ const EditSales = () => {
         const sale = salesRes.data;
         sale.price = sale.price.toFixed(2);
         sale.saleDate = dayjs(sale.saleDate);
-        console.log(sale)
         setSale(sale);
         setSelectedDate(sale.saleDate);
 
@@ -75,7 +74,6 @@ const EditSales = () => {
         );
         setSelectedOption(product);
       } catch (error) {
-        console.log(error);
         openSnackbarRef.current('error', 'error');
       }
       setLoading(false);
@@ -113,7 +111,6 @@ const EditSales = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       setIsSubmitting(true);
-      console.log(values);
       await axios
         .put(process.env.APIURL + "/sales/"+saleId, values, {
           headers: {
@@ -122,7 +119,6 @@ const EditSales = () => {
           },
         })
         .then((res) => {
-          //console.log(res);
           if (res.status == 200) {
             openSnackbar("Sales updated successfully", "success");
           } else {
@@ -130,7 +126,6 @@ const EditSales = () => {
           }
         })
         .catch((err) => {
-          //console.log(err);
           openSnackbar(err.response.data.message, "error");
         })
         .finally(() => {
@@ -139,6 +134,9 @@ const EditSales = () => {
     },
   });
 
+  if (loading) {
+    return <Layout>loading...</Layout>;
+  }
   return (
     <Layout>
       <form onSubmit={formik.handleSubmit}>

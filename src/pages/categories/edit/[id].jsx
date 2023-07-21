@@ -29,15 +29,11 @@ const EditCategory = () => {
         })
 
         .then((res) => {
-          console.log(res);
           formik.setValues({
             id: res.data[0].id,
             name: res.data[0].name,
             dateTimeCreated: res.data[0].dateTimeCreated,
           });
-          // formik.setFieldValue("id", res.data[0].id);
-          // formik.setFieldValue("name", res.data[0].name);
-          // formik.setFieldValue("dateTimeCreated", res.data[0].dateTimeCreated);
         })
         .catch((err) => {
           openSnackbar(err.response.data.message, "error");
@@ -71,18 +67,11 @@ const EditCategory = () => {
           },
         })
         .then((res) => {
-          //console.log(res);
           if (res.status == 200) {
-            // router.push({
-            //   pathname: process.env.APIURL + "/categories",
-            //   query: { snackbar: "Category updated successfully" },
-            //   // Replace [id] with the ID of the newly created item
-            // });
             openSnackbar("Category updated successfully", "success");
           }
         })
         .catch((err) => {
-          //console.log(err);
           openSnackbar(err.response.data.message, "error");
         });
     },

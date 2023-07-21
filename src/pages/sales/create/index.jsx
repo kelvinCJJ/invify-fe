@@ -60,10 +60,6 @@ const CreateSales = () => {
     }
   }, [open]);
 
-  useEffect(() => {
-    //getProducts();
-  }, []);
-
   async function getProducts() {
     await axios
       .get(process.env.APIURL + "/products", {
@@ -73,7 +69,6 @@ const CreateSales = () => {
         },
       })
       .then((res) => {
-        //console.log(res.data);
         setProducts(res.data);
       });
   }
@@ -96,7 +91,6 @@ const CreateSales = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       setIsSubmitting(true);
-      console.log(values);
       await axios
         .post(process.env.APIURL + "/sales", values, {
           headers: {
@@ -105,7 +99,6 @@ const CreateSales = () => {
           },
         })
         .then((res) => {
-          //console.log(res);
           if (res.status == 200) {
             openSnackbar("Sales created successfully", "success");
             formik.resetForm();
@@ -114,7 +107,6 @@ const CreateSales = () => {
           }
         })
         .catch((err) => {
-          //console.log(err);
           openSnackbar(err.response.data.message, "error");
         })
         .finally(() => {
@@ -122,6 +114,10 @@ const CreateSales = () => {
         });
     },
   });
+
+  if (loading) {
+    return <Layout>loading...</Layout>;
+  }
 
   return (
     <Layout>

@@ -17,14 +17,12 @@ const Stocktake = () => {
   const [scannedInventory, setScannedInventory] = useState([]);
 
   const handleScan = async (qrCode) => {
-    //console.log(qrCode);
     if (qrCode === null || startScan) {
       setLastScanTime(null);
       return;
     }
 
     if (qrCode === lastScanTime) {
-      console.log("same");
       return;
     }
 
@@ -49,7 +47,6 @@ const Stocktake = () => {
       );
 
       if (existingItem) {
-        console.log(existingItem);
         // Item already exists, you can handle it accordingly (e.g., show a notification)
         setScannedInventory((prevInventory) =>
           prevInventory.map((item) =>
@@ -116,7 +113,6 @@ const Stocktake = () => {
       ProductId: item.id,
       StockTakeQuantity: item.quantity,
     }));
-    console.log(stock);
     await axios
       .put(process.env.APIURL + "/products/stocktake", stock, {
         headers: {
@@ -125,15 +121,11 @@ const Stocktake = () => {
         },
       })
       .then((res) => {
-        console.log(res.data);
         openSnackbar("Stocktake submitted successfully", "success");
         setScannedInventory([]);
       });
   };
 
-  useEffect(() => {
-    console.log(scannedInventory);
-  }, [scannedInventory]);
 
   return (
     <Layout>
@@ -144,7 +136,6 @@ const Stocktake = () => {
             delay={500}
             onError={handleError}
             onScan={handleScan}
-            //style={{ width: "80%" }}
             className=" w-full max-w-2xl"
           />
         </div>

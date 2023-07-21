@@ -17,8 +17,7 @@ export const metadata = {
 
 export default function Login() {
   const router = useRouter();
-  const [message, setMessage] = useState("");
-  const [alert, setAlert] = useState("success");
+  const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setSubmitting] = useState(false);
 
   //yup email validation schema
@@ -29,33 +28,26 @@ export default function Login() {
   });
 
   const formik = useFormik({
-    initialValues: { email: "", username: "", password: "" },
+    initialValues: { email: "", password: "" },
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true);
-      //console.log(values);
       const credential = JSON.stringify(values, null, 2);
-      //console.log(credential);
       try {
         const user = await axios
-          .post(process.env.AUTHURL + "/register", values)
+          .post(process.env.AUTHURL + "/login", values)
           .then((res) => {
-            if (res.data.success == true) {
-              setAlert("success");
-              setMessage("Registration successful!");
-              setTimeout(() => {
-                router.push("/login");
-                }, 1500);
-              
+            if (res.data.success == true && res.data.value) {
+              const Uservalue = JSON.stringify(res.data.value, null, 2);
+              localStorage.setItem("session_user", Uservalue);
+              localStorage.setItem("token", res.data.value.token);
+              router.push("/dashboard");
             } else {
-              setAlert("error");
-              setMessage(res.data.message);
+              setErrorMessage(res.data.message);
             }
           });
       } catch (err) {
-        console.log(err);
-        setAlert("error");
-        setMessage(err.response.data.message);
+        setErrorMessage(err.response.data.message);
       }
       setSubmitting(false);
     },
@@ -66,17 +58,17 @@ export default function Login() {
       <div className="mx-auto flex w-full justify-center items-center flex-col space-y-2 p-3 sm:w-[450px]">
         <Logo className="h-10 w-10" />
         <h1 className="text-3xl font-bold tracking-tight">Welcome to Invify</h1>
-        <p className="text-md text-center">
-          The faster you create an account, the faster you can start using
-          Invify!
+        <p className="text-md ">
+          Enter your credentials to access your account
         </p>
+
         <form
           onSubmit={formik.handleSubmit}
           className="w-full p-3 flex flex-col  space-y-1"
         >
-          {message ? (
-            <Alert variant="filled" severity={alert}>
-              {message}
+          {errorMessage ? (
+            <Alert variant="filled" severity="error">
+              {errorMessage}
             </Alert>
           ) : null}
           <div className="flex flex-col my-2 space-y-2">
@@ -96,24 +88,6 @@ export default function Login() {
                 formik.errors.email &&
                 formik.touched.email &&
                 formik.errors.email
-              }
-            />
-            <TextField
-              id="username"
-              name="username"
-              label="Name"
-              variant="filled"
-              type="text"
-              margin="normal"
-              color="light"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.username}
-              error={formik.errors.username && formik.touched.username}
-              helperText={
-                formik.errors.username &&
-                formik.touched.username &&
-                formik.errors.username
               }
             />
             <TextField
@@ -147,10 +121,10 @@ export default function Login() {
         </Formik> */}
         <p className="px-8 text-center text-sm text-slate-500 ">
           <Link
-            href="/login"
+            href="/register"
             className="hover:text-brand underline underline-offset-4"
           >
-            Have an account? Sign in here
+            Don&apos;t have an account? Sign Up
           </Link>
         </p>
       </div>

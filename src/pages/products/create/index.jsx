@@ -42,9 +42,7 @@ const CreateProduct = () => {
           },
         })
         .then((res) => {
-          //console.log(res.data);
           setCategories(res.data);
-          //formik.setFieldValue("categoryId", res.data[0].id);
         });
     }
     if (!isCancelled) {
@@ -85,7 +83,6 @@ const CreateProduct = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       setIsSubmitting(true);
-      console.log(values);
       axios
         .post(process.env.APIURL + "/products", values, {
           headers: {
@@ -94,7 +91,6 @@ const CreateProduct = () => {
           },
         })
         .then((res) => {
-          //console.log(res);
           if (res.status == 200) {
             openSnackbar(
               "Product [" + values.name + "] created successfully",
@@ -106,7 +102,6 @@ const CreateProduct = () => {
           }
         })
         .catch((err) => {
-          //console.log(err);
           openSnackbar(err.response.data.message, "error");
         })
         .finally(() => {
@@ -129,9 +124,7 @@ const CreateProduct = () => {
           }
         )
         .then((res) => {
-          console.log(res);
           formik.setFieldValue("description", res.data.generated_text);
-          //setDescription(res.data.choices[0].text);
         })
         .finally(() => {
           setIsDescriptionLoading(false);
