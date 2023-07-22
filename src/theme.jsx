@@ -1,10 +1,7 @@
 import { createTheme } from "@mui/material";
 
 export const theme2 = createTheme({
-  
-  // status: {
-  //   danger: '#e53e3e',
-  // },
+
   palette: {
     mode: 'dark',
     primary: {
@@ -67,36 +64,4 @@ export const theme2 = createTheme({
     // },
     
   },
-  // typography: {
-  //   fontFamily: 'Roboto, sans-serif',
-  //   fontSize: 16,
-  //   h1: {
-  //     fontSize: 40,
-  //   },
-  //   h2: {
-  //     fontSize: 32,
-  //   },
-  //   h3: {
-  //     fontSize: 24,
-  //   },
-  //   h4: {
-  //     fontSize: 20,
-  //   },
-  //   h5: {
-  //     fontSize: 16,
-  //   },
-  //   h6: {
-  //     fontSize: 14,
-  //   },
-  // },
 });
-
-// mui theme settings
-//const theme = createTheme({
-//  palette: {
-//    white: {
-//      main: "#ffffff",
-//    },
-//  },
-  
-//});
