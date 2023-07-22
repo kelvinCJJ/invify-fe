@@ -189,7 +189,7 @@ const Dashboard = () => {
               <div className="col-span-2 min-h-[200px] max-h-[300px] lg:min-h-[400px] lg:max-h-[450px] rounded">
                 <div className="flex flex-row text-lg gap-x-2 items-center justify-center">
                   Sales Forecast (2023)
-                  <ButtonBase className="bg-warning-500 text-md p-1 rounded" onClick={retrainModel()}>
+                  <ButtonBase className="bg-warning-500 text-md p-1 rounded" onClick={() => retrainModel()}>
                     Train model
                   </ButtonBase>
                 </div>
@@ -236,7 +236,7 @@ const Dashboard = () => {
               <div className="col-span-2 min-h-[200px] max-h-[300px] lg:min-h-[400px] lg:max-h-[450px] rounded">
                 <div className="flex flex-row text-lg gap-x-2 items-center justify-center">
                   Sales Forecast (2023)
-                  <ButtonBase className="bg-warning-500 text-md p-1 rounded" onClick={retrainModel()}>
+                  <ButtonBase className="bg-warning-500 text-md p-1 rounded" onClick={() => retrainModel()}>
                     Train model
                   </ButtonBase>
                 </div>
@@ -284,7 +284,7 @@ const Dashboard = () => {
               <div className="col-span-2 min-h-[200px] max-h-[300px] lg:min-h-[400px] lg:max-h-[450px] rounded">
                 <div className="flex flex-row text-lg gap-x-2 items-center justify-center">
                   Sales Forecast (2023)
-                  <ButtonBase className="bg-warning-500 text-md p-1 rounded" onClick={retrainModel()}>
+                  <ButtonBase className="bg-warning-500 text-md p-1 rounded" onClick={() => retrainModel()}>
                     Train model
                   </ButtonBase>
                 </div>
