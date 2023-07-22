@@ -1,6 +1,6 @@
 import TopCard from "@/components/ui/TopCard";
 import Layout from "@/components/Layout";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Card from "@/components/ui/Card";
 import { AttachMoney, Paid, Sell, Shop, Shop2 } from "@mui/icons-material";
 import axios, { all } from "axios";
@@ -11,6 +11,7 @@ import LineChart from "@/components/ui/LineChart";
 import DateRangePicker from "@/components/ui/DateRangePicker";
 import BasicTabs from "@/components/ui/BasicTabs";
 import Skeleton from "react-loading-skeleton";
+import { useStateContext } from "@/contexts/ContextProvider";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -27,6 +28,13 @@ const Dashboard = () => {
   const [yearlySalesForecast, setYearlySalesForecast] = useState([]);
 
   const [productLowStock, setProductLowStock] = useState([]);
+
+  const { openSnackbar } = useStateContext();
+  const openSnackbarRef = useRef(openSnackbar);
+
+  useEffect(() => {
+    openSnackbarRef.current = openSnackbar;
+  }, [openSnackbar]);
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -98,6 +106,29 @@ const Dashboard = () => {
     fetchAll();
   }, []);
 
+  //api call to retrain model
+  const retrainModel = async () => {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    };
+    await axios
+      .get(process.env.APIURL + "/analytics/trainTotalSalesByMonth", { headers })
+      .then((res) => {
+        console.log(res);
+        if (res.status == 200) {
+          openSnackbarRef.current(
+            "Model Retrained, refresh page to see forecast",
+            "success"
+          );
+        }
+        else
+        {
+          openSnackbarRef.current("Unable to retrain model, please try again later!", "error");
+        }
+      });
+  };
+
   const headers = [
     // { id: "id", label: "Id", disablePadding: false, numeric: false },
     { id: "name", label: "Product", disablePadding: false, numeric: false },
@@ -158,7 +189,7 @@ const Dashboard = () => {
               <div className="col-span-2 min-h-[200px] max-h-[300px] lg:min-h-[400px] lg:max-h-[450px] rounded">
                 <div className="flex flex-row text-lg gap-x-2 items-center justify-center">
                   Sales Forecast (2023)
-                  <ButtonBase className="bg-warning-500 text-md p-1 rounded">
+                  <ButtonBase className="bg-warning-500 text-md p-1 rounded" onClick={retrainModel()}>
                     Train model
                   </ButtonBase>
                 </div>
@@ -205,7 +236,7 @@ const Dashboard = () => {
               <div className="col-span-2 min-h-[200px] max-h-[300px] lg:min-h-[400px] lg:max-h-[450px] rounded">
                 <div className="flex flex-row text-lg gap-x-2 items-center justify-center">
                   Sales Forecast (2023)
-                  <ButtonBase className="bg-warning-500 text-md p-1 rounded">
+                  <ButtonBase className="bg-warning-500 text-md p-1 rounded" onClick={retrainModel()}>
                     Train model
                   </ButtonBase>
                 </div>
@@ -253,7 +284,7 @@ const Dashboard = () => {
               <div className="col-span-2 min-h-[200px] max-h-[300px] lg:min-h-[400px] lg:max-h-[450px] rounded">
                 <div className="flex flex-row text-lg gap-x-2 items-center justify-center">
                   Sales Forecast (2023)
-                  <ButtonBase className="bg-warning-500 text-md p-1 rounded">
+                  <ButtonBase className="bg-warning-500 text-md p-1 rounded" onClick={retrainModel()}>
                     Train model
                   </ButtonBase>
                 </div>
