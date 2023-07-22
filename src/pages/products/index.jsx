@@ -95,11 +95,11 @@
         <div className="my-2">
         </div>
         <div className="flex flex-row space-x-2">
-          <Button className="text-md md:text-base text-primary-900 rounded-md normal-case p-2 lg:px-4  bg-lightshade-500 hover:bg-lightshade-600" href="/products/create">
+          <Button className="text-md md:text-base !text-primary-900 rounded-md normal-case p-2 lg:px-4  !bg-lightshade-500 !hover:bg-lightshade-600" href="/products/create">
             <Add />
             New Product
           </Button>
-          <Button className="text-md md:text-base text-primary-900 rounded-md normal-case p-2 lg:px-4  bg-lightshade-500 hover:bg-lightshade-600" href="/products/stocktake">
+          <Button className="text-md md:text-base !text-primary-900 rounded-md normal-case p-2 lg:px-4  !bg-lightshade-500 !hover:bg-lightshade-600" href="/products/stocktake">
             <Add />
             StockTake
           </Button>
