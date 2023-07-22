@@ -123,7 +123,7 @@ const Dashboard = () => {
         </div>
       ) : (
         <BasicTabs>
-          <div label="Last Year">
+          <div label="Current Year">
             <div className="grid grid-col-1 gap-4 md:grid-cols-3 md:gap-2">
               <Card
                 title="Total revenue this year"
