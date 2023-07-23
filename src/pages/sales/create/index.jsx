@@ -1,5 +1,5 @@
 //create sales page
-import React from "react";
+import React, { useRef } from "react";
 import {
   Autocomplete,
   Button,
@@ -26,52 +26,38 @@ import { Input } from "postcss";
 
 const CreateSales = () => {
   const router = useRouter();
-  const { openSnackbar } = useStateContext();
+  const { openSnackbar } = useStateContext();  
+  const openSnackbarRef = useRef(openSnackbar);
   const [products, setProducts] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [open, setOpen] = React.useState(false);
-  const [options, setOptions] = React.useState([]);
-  const loading = open && options.length === 0;
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState([]);
   const [selectedDate, handleDateChange] = useState(dayjs(new Date()));
 
+  
   useEffect(() => {
-    let active = true;
+    openSnackbarRef.current = openSnackbar;
+  }, [openSnackbar]);
 
-    if (!loading) {
-      return undefined;
-    }
+  useEffect(() => {
+    let isCancelled = false;
 
-    (async () => {
-      getProducts();
-
-      if (active) {
-        setOptions(products);
+    const fetchData = async () => {
+      try {
+        const [ productRes] = await Promise.all([
+          axios.get(process.env.APIURL + "/products/idandname", {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }),
+        ]);
+        setProductOptions(productRes.data);
+      } catch (error) {
+        openSnackbarRef.current(error.message, "error");
       }
-    })();
-
-    return () => {
-      active = false;
     };
-  }, [products, loading]);
 
-  useEffect(() => {
-    if (!open) {
-      setOptions([]);
-    }
-  }, [open]);
-
-  async function getProducts() {
-    await axios
-      .get(process.env.APIURL + "/products", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      })
-      .then((res) => {
-        setProducts(res.data);
-      });
-  }
 
   const validationSchema = Yup.object({
     price: Yup.string().test(
