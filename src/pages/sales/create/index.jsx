@@ -28,12 +28,11 @@ const CreateSales = () => {
   const router = useRouter();
   const { openSnackbar } = useStateContext();  
   const openSnackbarRef = useRef(openSnackbar);
-  const [products, setProducts] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
   const [selectedDate, handleDateChange] = useState(dayjs(new Date()));
-
+  const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     openSnackbarRef.current = openSnackbar;
@@ -52,11 +51,22 @@ const CreateSales = () => {
             },
           }),
         ]);
-        setProductOptions(productRes.data);
+        setOptions(productRes.data);
       } catch (error) {
         openSnackbarRef.current(error.message, "error");
       }
     };
+
+    if (!isCancelled) {
+      setLoading(true);
+      fetchData();
+      setLoading(false);
+    }
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
+
 
 
   const validationSchema = Yup.object({
@@ -131,7 +141,10 @@ const CreateSales = () => {
               options={options}
               loading={loading}
               onChange={(event, value) => {
-                formik.setFieldValue("productId", value.id);
+                if (value) {
+                  //setSelectedProductOption(value);                  
+                  formik.setFieldValue("productId", value.id);
+                }
               }}
               renderInput={(params) => (
                 <TextField

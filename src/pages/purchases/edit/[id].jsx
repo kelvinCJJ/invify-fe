@@ -122,7 +122,7 @@ const EditPurchase = () => {
           },
         })
         .then((res) => {
-          if (res.status == 200) {
+          if (res.data.success == true) {
             openSnackbarRef.current("Purchase updated successfully",
             "success");
           } else {
@@ -178,6 +178,7 @@ const EditPurchase = () => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
+                    required
                     className=" bg-darkaccent-800 rounded-lg"
                     variant="filled"
                     color="light"

@@ -151,6 +151,7 @@ const CreatePurchase = () => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
+                    required
                     className=" bg-darkaccent-800 rounded-lg"
                     variant="filled"
                     color="light"
@@ -219,7 +220,7 @@ const CreatePurchase = () => {
                 getOptionLabel={(option) => (option.name ? option.name : "")}
                 options={supplierOptions}
                 loading={loading}
-                defaultValue={selectedSupplierOption}
+                //defaultValue={selectedSupplierOption}
                 value={selectedSupplierOption}
                 onChange={(event, value) => {
                   if (value) {
@@ -230,6 +231,7 @@ const CreatePurchase = () => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
+                    required
                     className=" bg-darkaccent-800 rounded-lg"
                     variant="filled"
                     color="light"

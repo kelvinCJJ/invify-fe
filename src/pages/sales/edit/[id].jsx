@@ -119,7 +119,7 @@ const EditSales = () => {
           },
         })
         .then((res) => {
-          if (res.status == 200) {
+          if (res.data.success == true) {
             openSnackbar("Sales updated successfully", "success");
           } else {
             openSnackbar(res.data.message, "error");
